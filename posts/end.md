@@ -60,6 +60,8 @@ references:
 - **中国的药娘，多数藏在不为人知的社会夹缝里，离每个人的生活很远又很近。**
 :::
 
+![这世界不停开花，我想放进你心里一朵](https://raw.20100907.xyz/pic/end/book.webp)
+
 <MusicPlayer :list="[
   { src: 'https://raw.20100907.xyz/other/music/Grace.mp3', title: 'Grace', artist: 'Jannik', cover: 'https://raw.20100907.xyz/other/music/grace.jpg' },
 ]" />
