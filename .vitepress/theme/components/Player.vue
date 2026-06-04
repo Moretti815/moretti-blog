@@ -147,11 +147,13 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .player {
+  position: relative;
   height: 42px;
-  margin-top: 12px;
+  margin-bottom: 12px;
   transition: transform 0.3s;
   cursor: pointer;
   .player-content {
+    position: relative;
     margin: 0;
     width: fit-content;
     border-radius: 50px;

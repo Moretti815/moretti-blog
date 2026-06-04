@@ -28,10 +28,10 @@
   <Teleport to="body">
     <!-- 左侧菜单 -->
     <div :class="['left-menu', { hidden: footerIsShow }]">
+            <!-- 全局播放器 -->
+      <Player />
       <!-- 全局设置 -->
       <Settings />
-      <!-- 全局播放器 -->
-      <Player />
     </div>
   </Teleport>
   <!-- 右键菜单 -->
@@ -203,6 +203,9 @@ onBeforeUnmount(() => {
   left: 20px;
   bottom: 20px;
   z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   transition:
     opacity 0.3s,
     transform 0.3s;
