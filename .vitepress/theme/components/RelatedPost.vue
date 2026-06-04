@@ -6,7 +6,7 @@
         <i class="iconfont icon-star"></i>
         相关推荐
       </span>
-      <span class="shuffle" @click="router.go(shufflePost(theme.postData))"> 随便逛逛 </span>
+      <span class="shuffle" @click="router.go(shufflePost(postData))"> 随便逛逛 </span>
     </div>
     <!-- 文章列表 -->
     <PostList :listData="relatedData" simple />
@@ -16,9 +16,11 @@
 <script setup>
 import { generateId } from "@/utils/commonTools";
 import { shufflePost } from "@/utils/helper";
+import { usePostData } from "@/utils/usePostData.mjs";
 
 const router = useRouter();
-const { theme, page, frontmatter } = useData();
+const { page, frontmatter } = useData();
+const { postData, categoriesData, loadPostData } = usePostData();
 
 // 文章信息
 const relatedData = ref(null);
@@ -28,11 +30,11 @@ const getRelatedData = () => {
   // 分类名
   const catName = frontmatter.value.categories?.[0];
   // 指定分类数据
-  const postData = theme.value.categoriesData?.[catName]?.articles;
+  const currentPostData = categoriesData.value?.[catName]?.articles || [];
   // 本篇索引
   const postId = generateId(page.value?.filePath);
   // 过滤掉当前文章
-  const filteredPosts = postData.filter((post) => post.id !== postId);
+  const filteredPosts = currentPostData.filter((post) => post.id !== postId);
   // 取出两篇文章
   relatedData.value = filteredPosts.slice(0, 2);
   if (relatedData.value.length === 0) {
@@ -48,7 +50,7 @@ watch(
 );
 
 onMounted(() => {
-  getRelatedData();
+  loadPostData().then(() => getRelatedData());
 });
 </script>
 

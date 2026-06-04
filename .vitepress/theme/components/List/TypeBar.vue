@@ -11,7 +11,7 @@
       </a>
       <a href="/" :class="['type-item', { choose: !currentTypeName }]">首页</a>
       <a
-        v-for="(_, key, index) in theme.categoriesData"
+        v-for="(_, key, index) in categoriesData"
         :key="index"
         :href="`/pages/categories/${key}`"
         :class="['type-item', { hidden: currentTypeName === key }]"
@@ -28,10 +28,10 @@
     <div class="all-type">
       <a v-if="currentTypeName" :href="`/pages/tags/${currentTypeName}`" class="type-item choose">
         {{ currentTypeName }}
-        <span class="num">{{ theme.tagsData?.[currentTypeName]?.count || 0 }}</span>
+        <span class="num">{{ tagsData?.[currentTypeName]?.count || 0 }}</span>
       </a>
       <a
-        v-for="(item, key, index) in theme.tagsData"
+        v-for="(item, key, index) in tagsData"
         :key="index"
         :href="`/pages/tags/${key}`"
         :class="['type-item', { hidden: currentTypeName === key }]"
@@ -48,7 +48,10 @@
 </template>
 
 <script setup>
-const { theme, params } = useData();
+import { usePostData } from "@/utils/usePostData.mjs";
+
+const { params } = useData();
+const { tagsData, categoriesData, loadPostData } = usePostData();
 const props = defineProps({
   // 显示类别
   type: {
@@ -60,6 +63,9 @@ const props = defineProps({
 // 获取当前路由路径
 const currentTypeName = computed(() => {
   return params.value?.name || null;
+});
+onMounted(() => {
+  loadPostData();
 });
 </script>
 

@@ -11,7 +11,7 @@
           <i class="iconfont icon-article"></i>
           文章总数
         </span>
-        <span class="num">{{ theme.postData?.length || 0 }} 篇</span>
+        <span class="num">{{ theme.postCount || 0 }} 篇</span>
       </div>
       <div class="data-item">
         <span class="name">

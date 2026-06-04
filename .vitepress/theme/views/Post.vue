@@ -114,9 +114,11 @@
 import { formatTimestamp } from "@/utils/helper";
 import { generateId } from "@/utils/commonTools";
 import initFancybox from "@/utils/initFancybox";
+import { usePostData } from "@/utils/usePostData.mjs";
 import PasswordProtect from "@/components/PasswordProtect.vue";
 
 const { page, theme, frontmatter } = useData();
+const { postData, loadPostData } = usePostData();
 
 // 评论元素
 const commentRef = ref(null);
@@ -126,7 +128,23 @@ const postId = computed(() => generateId(page.value.relativePath));
 
 // 获取对应文章数据
 const postMetaData = computed(() => {
-  return theme.value.postData.find((item) => item.id === postId.value);
+  const loadedPost = postData.value.find((item) => item.id === postId.value);
+  if (loadedPost) return loadedPost;
+
+  const date = frontmatter.value.date ? new Date(frontmatter.value.date).getTime() : page.value.lastUpdated;
+  return {
+    id: postId.value,
+    title: frontmatter.value.title || page.value.title,
+    date,
+    lastModified: page.value.lastUpdated,
+    expired: date ? Math.floor((Date.now() - date) / (1000 * 60 * 60 * 24)) : 0,
+    tags: frontmatter.value.tags || [],
+    categories: frontmatter.value.categories || [],
+    description: frontmatter.value.description,
+    regularPath: page.value.relativePath ? `/${page.value.relativePath.replace(".md", ".html")}` : "",
+    top: frontmatter.value.top,
+    cover: frontmatter.value.cover,
+  };
 });
 
 // 密码保护相关
@@ -146,6 +164,7 @@ const handleUnlocked = () => {
 };
 
 onMounted(() => {
+  loadPostData();
   initFancybox(theme.value);
   // 检查是否已解锁
   if (hasPassword.value && checkUnlocked()) {

@@ -2,14 +2,14 @@
   <div class="archives s-card">
     <div class="title">
       <h1 class="name">文章</h1>
-      <sup v-if="theme.postData?.length" class="num">{{ theme.postData.length }}</sup>
+      <sup v-if="postCount" class="num">{{ postCount }}</sup>
     </div>
     <div class="archives-list">
-      <div v-for="(year, index) in theme.archivesData.year" :key="index" class="year-list">
+      <div v-for="(year, index) in archivesData.year" :key="index" class="year-list">
         <span class="year">{{ year }}</span>
         <div class="posts">
           <div
-            v-for="(post, postIndex) in theme.archivesData.data[year].articles"
+            v-for="(post, postIndex) in archivesData.data[year].articles"
             :key="postIndex"
             class="posts-item s-card hover"
             @click="router.go(post.regularPath)"
@@ -34,8 +34,14 @@
 </template>
 
 <script setup>
-const { theme } = useData();
+import { usePostData } from "@/utils/usePostData.mjs";
+
+const { postCount, archivesData, loadPostData } = usePostData();
 const router = useRouter();
+
+onMounted(() => {
+  loadPostData();
+});
 </script>
 
 <style lang="scss" scoped>
