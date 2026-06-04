@@ -3,6 +3,7 @@ const FONT_STYLESHEET_MAP = {
   vsans: "https://cdn.jsdmirror.com/gh/CYYYY5/chiyupic@main/fonts/vivosans.css",
   hmos: "https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css",
   xlfont: "https://cdn.jsdmirror.com/gh/CYYYY5/chiyupic@main/fonts/xiaolai.css",
+  firaCode: "https://use.sevencdn.com/css2?family=Fira+Code:wght@300..700&display=swap",
 };
 
 const FONT_FAMILY_MAP = {
@@ -10,6 +11,7 @@ const FONT_FAMILY_MAP = {
   vsans: "vivosans",
   hmos: "HarmonyOS_Regular",
   xlfont: "xiaolai",
+  firaCode: "Fira Code",
 };
 
 const STYLE_ID_PREFIX = "curve-font-";
@@ -91,6 +93,18 @@ export const ensureGlobalFontsLoaded = (fontFamily) => {
 
       await Promise.all(fontKeys.map((key) => appendStylesheet(key)));
       await Promise.all(fontKeys.map((key) => waitForFontReady(key)));
+      resolve();
+    });
+  });
+};
+
+export const ensureCodeFontLoaded = () => {
+  if (typeof window === "undefined") return Promise.resolve();
+
+  return new Promise((resolve) => {
+    runWhenIdle(async () => {
+      await appendStylesheet("firaCode");
+      await waitForFontReady("firaCode");
       resolve();
     });
   });

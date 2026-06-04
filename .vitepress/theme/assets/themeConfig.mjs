@@ -53,7 +53,7 @@ export const themeConfig = {
           href: "#",
         },
       ],
-      // iconfont
+            // iconfont
       [
         "link",
         {
@@ -63,27 +63,10 @@ export const themeConfig = {
         },
       ],
       // Embed code
-      ["link", { rel: "preconnect", href: "https://use.sevencdn.com" }],
-      ["link", { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" }],
-      [
-        "link",
-        {
-          crossorigin: "anonymous",
-          href: "https://use.sevencdn.com/css2?family=Fira+Code:wght@300..700&display=swap",
-          rel: "stylesheet",
-        },
-      ],
-      // 预载 DocSearch
-      [
-        "link",
-        {
-          href: "https://0F1DUC8MAX-dsn.algolia.net",
-          rel: "preconnect",
-          crossorigin: "",
-        },
-      ],
+      // Code font and Algolia connections are loaded lazily only when needed.
     ],
   },
+
   // 导航栏菜单
   nav: [
     {

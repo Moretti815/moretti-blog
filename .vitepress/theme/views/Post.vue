@@ -102,28 +102,33 @@
         <NextPost />
         <!-- 相关文章 -->
         <RelatedPost />
-        <!-- 评论 -->
+                <!-- 评论 -->
         <Comments ref="commentRef" />
       </article>
-      <Aside showToc />
+      <Aside v-if="isDesktopAsideVisible" showToc />
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { formatTimestamp } from "@/utils/helper";
 import { generateId } from "@/utils/commonTools";
 import initFancybox from "@/utils/initFancybox";
+import { ensureCodeFontLoaded } from "@/utils/fontLoader.mjs";
+import { useDesktopAside } from "@/utils/useDesktopAside.mjs";
 import { usePostData } from "@/utils/usePostData.mjs";
 import PasswordProtect from "@/components/PasswordProtect.vue";
 
 const { page, theme, frontmatter } = useData();
+const { isDesktopAsideVisible } = useDesktopAside();
 const { postData, loadPostData } = usePostData();
 
 // 评论元素
 const commentRef = ref(null);
 
 // 文章 ID
+
 const postId = computed(() => generateId(page.value.relativePath));
 
 // 获取对应文章数据
@@ -163,9 +168,17 @@ const handleUnlocked = () => {
   isUnlocked.value = true;
 };
 
+const loadCodeFontIfNeeded = async () => {
+  await nextTick();
+  if (document.querySelector('.markdown-main-style div[class*="language-"]')) {
+    ensureCodeFontLoaded();
+  }
+};
+
 onMounted(() => {
   loadPostData();
   initFancybox(theme.value);
+  loadCodeFontIfNeeded();
   // 检查是否已解锁
   if (hasPassword.value && checkUnlocked()) {
     isUnlocked.value = true;
@@ -175,6 +188,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @use "../style/post.scss";
+
 
 .password-protect-wrapper {
   width: 100%;

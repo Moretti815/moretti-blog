@@ -22,20 +22,25 @@
                 : ''
           "
         />
-      </div>
+            </div>
       <!-- 侧边栏 -->
-      <Aside />
+      <Aside v-if="isDesktopAsideVisible" />
     </div>
+
   </div>
 </template>
 
 <script setup>
 import { mainStore } from "@/store";
+import { useDesktopAside } from "@/utils/useDesktopAside.mjs";
 import { usePostData } from "@/utils/usePostData.mjs";
 
 const { theme } = useData();
+const { isDesktopAsideVisible } = useDesktopAside();
 const { postData: allPosts, tagsData, categoriesData, loadPostData } = usePostData();
+
 const store = mainStore();
+
 const props = defineProps({
   // 显示首页头部
   showHeader: {

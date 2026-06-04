@@ -1,19 +1,38 @@
 <!-- 普通页面 -->
 <template>
-  <div :class="[frontmatter.layout || 'page', { 'has-aside': frontmatter.aside }]">
+  <div :class="[frontmatter.layout || 'page', { 'has-aside': showAside }]">
     <div class="page-content">
       <!-- 页面内容 -->
       <Content id="page-content" :class="['markdown-main-style', { 's-card': frontmatter.card }]" />
       <!-- 评论 -->
       <Comments v-if="frontmatter.comment" />
     </div>
-    <Aside v-if="frontmatter.aside" />
+    <Aside v-if="showAside" />
   </div>
 </template>
 
+
 <script setup>
+import { ensureCodeFontLoaded } from "@/utils/fontLoader.mjs";
+import { useDesktopAside } from "@/utils/useDesktopAside.mjs";
+
 const { frontmatter } = useData();
+const { isDesktopAsideVisible } = useDesktopAside();
+
+const showAside = computed(() => frontmatter.value.aside && isDesktopAsideVisible.value);
+
+const loadCodeFontIfNeeded = async () => {
+  await nextTick();
+  if (document.querySelector('.markdown-main-style div[class*="language-"]')) {
+    ensureCodeFontLoaded();
+  }
+};
+
+onMounted(() => {
+  loadCodeFontIfNeeded();
+});
 </script>
+
 
 <style lang="scss" scoped>
 @use "../style/post.scss";
