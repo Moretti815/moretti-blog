@@ -110,7 +110,7 @@
       </div>
     </Banner>
     <!-- 友链数据 -->
-    <LinkList :listData="linkData" :useFriendsLink="true" statusJsonUrl="https://clink.268682.xyz/result.json" />
+    <LinkList :listData="linkData" :useFriendsLink="true" statusJsonUrl="https://fc.2005815.xyz/link.json" />
   </div>
 </template>
 

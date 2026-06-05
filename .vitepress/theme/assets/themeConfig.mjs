@@ -82,6 +82,15 @@ export const themeConfig = {
           crossorigin: "",
         },
       ],
+      // Umami 统计
+      [
+        "script",
+        {
+          defer: true,
+          src: "https://um.2005815.xyz/script.js",
+          "data-website-id": "f8fb9e7a-9d44-49c1-96f7-98ac672eb88f",
+        },
+      ],
     ],
   },
   // 导航栏菜单
@@ -352,7 +361,7 @@ export const themeConfig = {
   // 友链
   friends: {
     // 友链朋友圈
-    circleOfFriends: "https://fc-lite.268682.xyz/",
+    circleOfFriends: "https://fc.2005815.xyz/",
     // 动态友链
     dynamicLink: {
       server: "",

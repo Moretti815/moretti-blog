@@ -175,10 +175,13 @@ const loadStatusData = async () => {
 
 // 应用状态数据
 const applyStatusData = (data) => {
-  if (!data?.link_status) return;
+  // 支持两种数据格式：新的 link_data 或旧的 link_status
+  const linkData = data?.link_data || data?.link_status;
+  if (!linkData) return;
 
   const newMap = new Map();
-  data.link_status.forEach((item) => {
+  linkData.forEach((item) => {
+    // 新的 API 使用 link 字段，旧的 API 也使用 link 字段
     const link = item.link?.replace(/\/$/, '');
     if (!link) return;
 

@@ -75,29 +75,98 @@ const statsData = ref({
   last_month_pv: { label: '最近月访问', value: '0' }
 });
 
-onMounted(() => {
-  if (props.tj && props.tj.provider === 'custom' && props.tj.url) {
-    fetch(props.tj.url)
-      .then(res => res.json())
-      .then(data => {
-        const titleMap = {
-          today_uv: '今日人数',
-          today_pv: '今日访问',
-          yesterday_uv: '昨日人数',
-          yesterday_pv: '昨日访问',
-          last_month_pv: '最近月访问'
-        };
+// 获取日期范围
+const getDateRange = (daysAgo) => {
+  const date = new Date();
+  date.setDate(date.getDate() - daysAgo);
+  return date.toISOString().split('T')[0];
+};
 
-        for (let key in data) {
-          if (data.hasOwnProperty(key) && titleMap[key]) {
-            statsData.value[key] = {
-              label: titleMap[key],
-              value: data[key]
-            };
-          }
-        }
-      })
-      .catch(err => console.error('Failed to fetch stats:', err));
+// 格式化数字
+const formatNumber = (num) => {
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+  return num.toString();
+};
+
+// 获取 Umami 统计数据
+const fetchUmamiStats = async () => {
+  if (!props.tj?.url || !props.tj?.websiteId) return;
+
+  try {
+    const websiteId = props.tj.websiteId;
+    const baseUrl = props.tj.url.replace(/\/$/, '');
+
+    // 获取今日数据
+    const todayRes = await fetch(`${baseUrl}/api/websites/${websiteId}/stats?startAt=${Date.now() - 86400000}&endAt=${Date.now()}`);
+    const todayData = await todayRes.json();
+
+    // 获取昨日数据
+    const yesterdayStart = new Date();
+    yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+    yesterdayStart.setHours(0, 0, 0, 0);
+    const yesterdayEnd = new Date(yesterdayStart);
+    yesterdayEnd.setHours(23, 59, 59, 999);
+
+    const yesterdayRes = await fetch(`${baseUrl}/api/websites/${websiteId}/stats?startAt=${yesterdayStart.getTime()}&endAt=${yesterdayEnd.getTime()}`);
+    const yesterdayData = await yesterdayRes.json();
+
+    // 获取最近30天数据
+    const monthStart = new Date();
+    monthStart.setDate(monthStart.getDate() - 30);
+    monthStart.setHours(0, 0, 0, 0);
+    const monthRes = await fetch(`${baseUrl}/api/websites/${websiteId}/stats?startAt=${monthStart.getTime()}&endAt=${Date.now()}`);
+    const monthData = await monthRes.json();
+
+    // 更新统计数据
+    statsData.value = {
+      today_uv: { label: '今日人数', value: formatNumber(todayData?.visitors?.value || 0) },
+      today_pv: { label: '今日访问', value: formatNumber(todayData?.pageviews?.value || 0) },
+      yesterday_uv: { label: '昨日人数', value: formatNumber(yesterdayData?.visitors?.value || 0) },
+      yesterday_pv: { label: '昨日访问', value: formatNumber(yesterdayData?.pageviews?.value || 0) },
+      last_month_pv: { label: '最近月访问', value: formatNumber(monthData?.pageviews?.value || 0) }
+    };
+  } catch (err) {
+    console.error('Failed to fetch Umami stats:', err);
+  }
+};
+
+// 获取自定义统计数据
+const fetchCustomStats = async () => {
+  if (!props.tj?.url) return;
+
+  try {
+    const res = await fetch(props.tj.url);
+    const data = await res.json();
+
+    const titleMap = {
+      today_uv: '今日人数',
+      today_pv: '今日访问',
+      yesterday_uv: '昨日人数',
+      yesterday_pv: '昨日访问',
+      last_month_pv: '最近月访问'
+    };
+
+    for (let key in data) {
+      if (data.hasOwnProperty(key) && titleMap[key]) {
+        statsData.value[key] = {
+          label: titleMap[key],
+          value: data[key]
+        };
+      }
+    }
+  } catch (err) {
+    console.error('Failed to fetch custom stats:', err);
+  }
+};
+
+onMounted(() => {
+  if (!props.tj) return;
+
+  if (props.tj.provider === 'umami') {
+    fetchUmamiStats();
+  } else if (props.tj.provider === 'custom' && props.tj.url) {
+    fetchCustomStats();
   }
 });
 </script>

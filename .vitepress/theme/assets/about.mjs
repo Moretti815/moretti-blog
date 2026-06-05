@@ -213,11 +213,12 @@ export const aboutData = {
   // 统计
   tj: {
     img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop",
-    provider: "custom",
-    url: "",
+    provider: "umami",
+    url: "https://um.2005815.xyz",
+    websiteId: "f8fb9e7a-9d44-49c1-96f7-98ac672eb88f",
     desc: "<p>本站访问数据统计，感谢每一位访客的支持！</p>",
     button: true,
-    button_link: "#",
+    button_link: "https://um.2005815.xyz/share/nJejIGVqJf4Pux46",
     button_text: "查看详情",
   },
 
