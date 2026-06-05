@@ -72,11 +72,12 @@ interface StatusResponse {
   updatedAt: string | null;
 }
 
-// 用于强制刷新的时间戳
-const refreshKey = ref(Date.now());
+// 用于强制刷新的时间戳 - 使用固定初始值避免 SSR 水合问题
+const refreshKey = ref(0);
 const data = ref<StatusResponse | null>(null);
 const pending = ref(true);
 const error = ref(false);
+const isClient = ref(false);
 
 const fetchData = async () => {
     pending.value = true;
@@ -106,6 +107,8 @@ const fetchData = async () => {
 
 // 初始加载
 onMounted(() => {
+    isClient.value = true;
+    refreshKey.value = Date.now();
     fetchData();
 });
 

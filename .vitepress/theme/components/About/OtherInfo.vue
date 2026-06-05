@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { mainStore } from '@/store';
 
@@ -62,8 +62,13 @@ const props = defineProps({
   }
 });
 
+// 使用客户端安全的计算属性
+const isClient = ref(false);
+
 const currentMapImage = computed(() => {
   if (!props.oneself?.map) return '';
+  // 服务端渲染时使用默认值，避免水合不匹配
+  if (!isClient.value) return props.oneself.map.light;
   return themeValue.value === 'dark' ? props.oneself.map.dark : props.oneself.map.light;
 });
 
@@ -161,13 +166,19 @@ const fetchCustomStats = async () => {
 };
 
 onMounted(() => {
+  // 标记为客户端环境
+  isClient.value = true;
+
   if (!props.tj) return;
 
-  if (props.tj.provider === 'umami') {
-    fetchUmamiStats();
-  } else if (props.tj.provider === 'custom' && props.tj.url) {
-    fetchCustomStats();
-  }
+  // 使用 nextTick 确保水合完成后再获取数据
+  nextTick(() => {
+    if (props.tj.provider === 'umami') {
+      fetchUmamiStats();
+    } else if (props.tj.provider === 'custom' && props.tj.url) {
+      fetchCustomStats();
+    }
+  });
 });
 </script>
 

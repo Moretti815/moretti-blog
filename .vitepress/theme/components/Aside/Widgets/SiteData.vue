@@ -18,7 +18,7 @@
           <i class="iconfont icon-date"></i>
           建站天数
         </span>
-        <span class="num">{{ daysFromNow(theme.since) }} 天</span>
+        <span class="num">{{ siteDays }} 天</span>
       </div>
       <div class="data-item">
         <span class="name">
@@ -39,12 +39,19 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
 import { loadScript } from "@/utils/commonTools";
 import { daysFromNow } from "@/utils/helper";
 
 const { theme } = useData();
 
+// 建站天数 - 使用 ref 避免 SSR 水合问题
+const siteDays = ref(0);
+
 onMounted(() => {
+  // 客户端才计算天数
+  siteDays.value = daysFromNow(theme.value.since);
+
   loadScript("https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js", {
     async: true,
     reload: true,

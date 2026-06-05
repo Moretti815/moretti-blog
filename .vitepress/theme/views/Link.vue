@@ -15,8 +15,8 @@
           </div>
         </div>
       </template>
-      <!-- 友链头像轮播 -->
-      <div class="link-group">
+      <!-- 友链头像轮播 - 仅在客户端渲染 -->
+      <div v-if="isClient" class="link-group">
         <div class="tags-group-wrapper">
           <!-- 第一行 -->
           <div class="tags-group-row tags-group-row-1">
@@ -115,9 +115,16 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { smoothScrolling } from "@/utils/helper";
 import linkData from "@/assets/linkData.mjs";
+
+// 客户端检测
+const isClient = ref(false);
+
+onMounted(() => {
+  isClient.value = true;
+});
 
 // 全部友链
 const allLinkData = computed(() => {

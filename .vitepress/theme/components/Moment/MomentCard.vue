@@ -35,36 +35,49 @@
 
       <!-- 图片网格 -->
       <div v-if="data.images?.length > 0" class="content-images" :class="`layout-${imageLayout}`">
-        <a
-          v-for="(img, index) in displayedImages"
-          :key="index"
-          class="image-item img-fancybox"
-          :href="img"
-          :data-fancybox="`moment-${data.id}`"
-          :data-caption="`图片 ${index + 1} / ${data.images.length}`"
-        >
-          <img :src="img" :alt="`图片 ${index + 1}`" loading="lazy" />
-        </a>
-        <a
-          v-if="hasMoreImages"
-          class="image-more img-fancybox"
-          :href="data.images[maxDisplayImages]"
-          :data-fancybox="`moment-${data.id}`"
-          data-caption="查看更多图片"
-        >
-          <span>+{{ data.images.length - maxDisplayImages }}</span>
-        </a>
-        <!-- 隐藏链接，用于加载剩余图片到灯箱 -->
-        <a
-          v-for="(img, index) in hiddenImages"
-          :key="`hidden-${index}`"
-          class="img-fancybox hidden"
-          :href="img"
-          :data-fancybox="`moment-${data.id}`"
-          :data-caption="`图片 ${maxDisplayImages + index + 1} / ${data.images.length}`"
-        >
-          <img :src="img" alt="" />
-        </a>
+        <!-- SSR 期间只显示图片，不添加 fancybox 属性 -->
+        <template v-if="!isClient">
+          <div
+            v-for="(img, index) in displayedImages"
+            :key="index"
+            class="image-item"
+          >
+            <img :src="img" :alt="`图片 ${index + 1}`" loading="lazy" />
+          </div>
+        </template>
+        <!-- 客户端添加 fancybox 支持 -->
+        <template v-else>
+          <a
+            v-for="(img, index) in displayedImages"
+            :key="index"
+            class="image-item img-fancybox"
+            :href="img"
+            :data-fancybox="`moment-${data.id}`"
+            :data-caption="`图片 ${index + 1} / ${data.images.length}`"
+          >
+            <img :src="img" :alt="`图片 ${index + 1}`" loading="lazy" />
+          </a>
+          <a
+            v-if="hasMoreImages"
+            class="image-more img-fancybox"
+            :href="data.images[maxDisplayImages]"
+            :data-fancybox="`moment-${data.id}`"
+            data-caption="查看更多图片"
+          >
+            <span>+{{ data.images.length - maxDisplayImages }}</span>
+          </a>
+          <!-- 隐藏链接，用于加载剩余图片到灯箱 -->
+          <a
+            v-for="(img, index) in hiddenImages"
+            :key="`hidden-${index}`"
+            class="img-fancybox hidden"
+            :href="img"
+            :data-fancybox="`moment-${data.id}`"
+            :data-caption="`图片 ${maxDisplayImages + index + 1} / ${data.images.length}`"
+          >
+            <img :src="img" alt="" />
+          </a>
+        </template>
       </div>
     </div>
 
@@ -95,8 +108,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { themeConfig } from '@/assets/themeConfig.mjs';
+
+// 客户端检测
+const isClient = ref(false);
+
+onMounted(() => {
+  isClient.value = true;
+});
 
 const props = defineProps({
   data: {
@@ -187,6 +207,9 @@ const formatDate = (date) => {
 // 格式化相对时间
 const formatRelativeTime = (date) => {
   if (!date) return '';
+  // 服务端返回固定格式，避免水合不匹配
+  if (!isClient.value) return formatDate(date);
+
   const now = new Date();
   const d = new Date(date);
   const diff = now - d;

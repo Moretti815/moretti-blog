@@ -12,7 +12,12 @@ const initFancybox = (themeConfig) => {
           console.error("图片灯箱初始化失败", error);
           return false;
         }
-        Fancybox.bind("[data-fancybox]", {
+        // 确保 Fancybox 已加载
+        if (typeof window.Fancybox === 'undefined') {
+          console.error("图片灯箱初始化失败: Fancybox 未定义");
+          return false;
+        }
+        window.Fancybox.bind("[data-fancybox]", {
           hideScrollbar: true,
           Carousel: {
             transition: "slide",
@@ -72,6 +77,7 @@ const initFancybox = (themeConfig) => {
     });
   } catch (error) {
     console.error("图片灯箱初始化失败", error);
+    return false;
   }
 };
 

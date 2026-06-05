@@ -100,9 +100,12 @@ const selectedTag = ref('');
 const page = ref(1);
 const hasMore = ref(true);
 
+// 客户端检测
+const isClient = ref(false);
+
 // 瀑布流列数
 const columnCount = computed(() => {
-  if (typeof window === 'undefined') return 3;
+  if (!isClient.value) return 3; // 服务端固定返回3列
   if (window.innerWidth <= 768) return 1;
   if (window.innerWidth <= 1300) return 2;
   return 3;
@@ -305,9 +308,13 @@ watch(themeValue, () => {
 });
 
 onMounted(() => {
-  fetchData();
-  // 初始化 fancybox
-  initFancybox(themeConfig);
+  // 标记为客户端环境
+  isClient.value = true;
+
+  // 使用 nextTick 确保水合完成后再获取数据
+  nextTick(() => {
+    fetchData();
+  });
 });
 </script>
 

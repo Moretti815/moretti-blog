@@ -14,7 +14,7 @@
         @click="toPost($event, item.regularPath)"
       ></a>
       <div v-if="!simple && showCover(item)" class="post-cover">
-        <img :src="getCover(item)" :alt="item.title">
+        <img :src="getCover(item, index)" :alt="item.title">
       </div>
       <div class="post-content">
         <div v-if="!simple && item?.categories" class="post-category">
@@ -90,14 +90,15 @@ const gridStyle = computed(() =>
 const showCover = () => themeConfig.value?.cover?.showCover?.enable
 
 // 获取封面图片 按优先级获取：cover > defaultCover > false
-const getCover = ({ cover: itemCover }) => {
+// 使用 index 代替 Math.random() 确保 SSR 和客户端结果一致
+const getCover = ({ cover: itemCover }, index = 0) => {
   const { cover } = themeConfig.value ?? {}
-  
+
   if (!cover?.showCover?.enable) return false
   if (itemCover) return itemCover
-  
-  return Array.isArray(cover.showCover.defaultCover) 
-    ? cover.showCover.defaultCover[Math.floor(Math.random() * cover.showCover.defaultCover.length)]
+
+  return Array.isArray(cover.showCover.defaultCover)
+    ? cover.showCover.defaultCover[index % cover.showCover.defaultCover.length]
     : false
 }
 

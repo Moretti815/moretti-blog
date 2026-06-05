@@ -12,7 +12,13 @@
         <span class="author-content-item-title">{{ game.subtitle }}</span>
         <div class="content-bottom">
           <div v-if="game.icon_group" class="icon-group">
-            <i v-for="(icon, i) in game.icon_group" :key="i" :style="{ backgroundImage: `url(${icon})` }"></i>
+            <span
+              v-for="(icon, i) in game.icon_group"
+              :key="i"
+              class="icon-item"
+              :class="{ 'is-emoji': isEmoji(icon) }"
+              :style="!isEmoji(icon) ? { backgroundImage: `url(${icon})` } : {}"
+            >{{ isEmoji(icon) ? icon : '' }}</span>
           </div>
           <div v-else-if="game.tips_left" class="tips">{{ game.tips_left }}</div>
           <div v-if="game.tips_right" class="tips">{{ game.tips_right }}</div>
@@ -23,12 +29,26 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+
+const isClient = ref(false);
+
+onMounted(() => {
+  isClient.value = true;
+});
+
 defineProps({
   games: {
     type: Array,
     default: () => []
   }
 });
+
+// 判断是否为 emoji（SSR 安全）
+const isEmoji = (icon) => {
+  if (!isClient.value) return false; // 服务端默认当作图片处理
+  return !icon.startsWith('http');
+};
 </script>
 
 <style scoped lang="scss">
@@ -111,12 +131,19 @@ defineProps({
       display: flex;
       gap: 0.5rem;
 
-      i {
+      .icon-item {
         width: 24px;
         height: 24px;
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
+        display: inline-block;
+
+        &.is-emoji {
+          font-size: 20px;
+          line-height: 24px;
+          text-align: center;
+        }
       }
     }
 
