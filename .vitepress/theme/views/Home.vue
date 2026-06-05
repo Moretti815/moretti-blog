@@ -2,6 +2,7 @@
 <template>
   <div class="home">
     <Banner v-if="showHeader" :height="store.bannerType" />
+    <MomentTicker v-if="showHeader && themeConfig.momentTicker?.enable" />
     <div class="home-content">
       <div class="posts-content">
         <!-- 分类总览 -->
@@ -31,6 +32,8 @@
 
 <script setup>
 import { mainStore } from "@/store";
+import { themeConfig } from "@/assets/themeConfig.mjs";
+import MomentTicker from "@/components/MomentTicker.vue";
 
 const { theme } = useData();
 const store = mainStore();

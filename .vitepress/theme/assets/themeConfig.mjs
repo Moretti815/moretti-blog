@@ -3,27 +3,27 @@ export const themeConfig = {
   // 站点信息
   siteMeta: {
     // 站点标题
-    title: "池鱼小栈",
+    title: "Moretti's Blog",
     // 站点描述
-    description: "跨过晨昏线，便是永夜。",
+    description: "人生如逆旅，我亦是行人。",
     // 站点logo
-    logo: "/images/logo/logo.webp",
+    logo: "https://agi.alicdn.com/user/769lz/06729553-fde6-4d7a-94ed-25be45434b8d_icon.jpeg",
     // 站点地址
-    site: "https://chiyu.it",
+    site: "https://b.2005815.xyz",
     // 语言
     lang: "zh-CN",
     // 作者
     author: {
-      name: "池鱼",
-      cover: "/images/logo/logo.webp",
-      email: "kazukokawagawa@qq.com",
-      link: "https://chiyu.it",
+      name: "Moretti815",
+      cover: "https://agi.alicdn.com/user/769lz/06729553-fde6-4d7a-94ed-25be45434b8d_icon.jpeg",
+      email: "mcy@kemiaosw.top",
+      link: "https://b.2005815.xyz",
     },
   },
   // 备案信息
-  icp: "萌ICP备20259222号",
+  icp: "",
   // 建站日期
-  since: "2025-04-29",
+  since: "2024-11-01",
   // 每页文章数据
   postSize: 5,
   // inject
@@ -105,7 +105,7 @@ export const themeConfig = {
     {
       text: "友链",
       items: [
-        //  { text: "友链鱼塘", link: "/pages/friends", icon: "fish" },
+        { text: "友链鱼塘", link: "/pages/fcircle", icon: "fish" },
         { text: "友情链接", link: "/pages/link", icon: "people" },
       ],
     },
@@ -124,7 +124,7 @@ export const themeConfig = {
       name: "项目",
       list: [
         {
-          icon: "/images/logo/logo.webp",
+          icon: "https://cdn2.codesign.qq.com/icons/g5ZpEgx3z4VO6j2/latest/iconfont.css",
           name: "主站",
           url: "/",
         },
@@ -175,14 +175,14 @@ export const themeConfig = {
       // 是否开启封面显示 文章不设置cover封面会显示异常，可以设置下方默认封面
       enable: false,
       // 封面布局方式: left | right | both
-      coverLayout: 'both',
+      coverLayout: "both",
       // 默认封面(随机展示)
       defaultCover: [
-        'https://example.com/1.avif',
-        'https://example.com/2.avif',
-        'https://example.com/3.avif'
-      ]
-    }
+        "https://example.com/1.avif",
+        "https://example.com/2.avif",
+        "https://example.com/3.avif",
+      ],
+    },
   },
   // 页脚信息
   footer: {
@@ -227,7 +227,11 @@ export const themeConfig = {
       {
         text: "项目",
         items: [
-          { text: "本站源码", link: "https://github.com/kazukokawagawa/vitepress-theme-curve", newTab: true },
+          {
+            text: "本站源码",
+            link: "https://github.com/moretti815/moretti-blog",
+            newTab: true,
+          },
         ],
       },
       //{
@@ -250,9 +254,7 @@ export const themeConfig = {
       },
       {
         text: "服务",
-        items: [
-          { text: "站点状态", link: "https://status.chiyu.it", newTab: true },
-        ],
+        items: [{ text: "站点状态", link: "https://status.chiyu.it", newTab: true }],
       },
     ],
     // 页脚徽标
@@ -316,11 +318,11 @@ export const themeConfig = {
       // 倒计时日期
       data: {
         name: "生日",
-        date: "2026-09-07",
+        date: "2005-08-15",
       },
     },
     timing: {
-      enable: true,
+      enable: false,
       items: [
         {
           icon: "💌",
@@ -344,13 +346,13 @@ export const themeConfig = {
       enable: true,
     },
     HelloGithub: {
-      enable: false,
+      enable: true,
     },
   },
   // 友链
   friends: {
     // 友链朋友圈
-    circleOfFriends: "",
+    circleOfFriends: "https://fc-lite.268682.xyz/",
     // 动态友链
     dynamicLink: {
       server: "",
@@ -426,5 +428,19 @@ export const themeConfig = {
   // 站点统计
   tongji: {
     "51la": "3M1I52LMkdPIgpya",
+  },
+  // 说说页面配置
+  moment: {
+    // 默认展示的数据源: memos / jike / tgtalk
+    defaultTab: "jike",
+  },
+  // 说说滚动条配置
+  momentTicker: {
+    // 是否启用
+    enable: true,
+    // 数据源: memos / jike / tgtalk
+    source: "jike",
+    // 显示数量
+    limit: 5,
   },
 };

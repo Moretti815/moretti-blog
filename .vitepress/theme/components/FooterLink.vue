@@ -228,9 +228,12 @@ const toggleBadge = (index) => {
       margin: 0 1rem;
       transition: transform 0.3s;
       cursor: pointer;
+      border-radius: 50%;
+      overflow: hidden;
       img {
         width: 100%;
         height: 100%;
+        border-radius: 50%;
       }
       &:hover {
         transform: scale(1.2);

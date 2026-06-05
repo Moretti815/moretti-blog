@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Transition name="fade" mode="out-in">
       <div v-if="loadingStatus" class="loading" @click="loadingStatus = false">
-        <img :src="theme.siteMeta.logo" class="logo" alt="loading-logo" />
+        <img src="https://jsd.268682.xyz/gh/Kemeow0815/img@main/img/preloader.gif" class="logo" alt="loading" />
         <span :class="['tip', { show: showTip }]"> 一直显示？点击任意区域即可关闭 </span>
       </div>
     </Transition>

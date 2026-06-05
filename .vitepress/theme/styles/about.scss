@@ -1,0 +1,190 @@
+// 关于页面样式
+// 参考 AstraBay Hexo 主题设计
+
+// ==================== 基础变量 ====================
+:root {
+  --efu-white: #fff;
+  --efu-white-op: rgba(255, 255, 255, 0.2);
+  --efu-black: #000;
+  --efu-black-op: rgba(0, 0, 0, 0.2);
+  --efu-none: #00000000;
+  --efu-gray: #999999;
+  --efu-gray-op: rgba(153, 153, 153, 0.2);
+  --efu-red: #ff3842;
+  --efu-red-op: rgba(255, 56, 66, 0.2);
+  --efu-green: #10b981;
+  --efu-green-op: rgba(16, 185, 129, 0.2);
+  --efu-blue: #3b82f6;
+  --efu-blue-op: rgba(59, 130, 246, 0.2);
+  --efu-yellow: #f59e0b;
+  --efu-yellow-op: rgba(245, 158, 11, 0.2);
+  --efu-main: var(--main-color, #3b82f6);
+  --efu-main-op: rgba(59, 130, 246, 0.2);
+  --efu-orange: #f97316;
+  --efu-purple: #8b5cf6;
+  --efu-pink: #ec4899;
+  --efu-fontcolor: var(--main-font-color, #1f2937);
+  --efu-background: var(--main-site-background, #f9fafb);
+  --efu-card-bg: var(--main-card-background, #ffffff);
+  --efu-secondbg: var(--main-card-second-background, #f3f4f6);
+  --efu-secondtext: var(--main-font-second-color, #6b7280);
+  --efu-shadow-border: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --efu-shadow-lightblack: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --efu-shadow-light2black: 0 8px 16px rgba(0, 0, 0, 0.15);
+  --efu-shadow-blue: 0 8px 32px -8px rgba(59, 130, 246, 0.3);
+  --efu-shadow-white: 0 8px 32px -8px rgba(255, 255, 255, 0.3);
+  --efu-maskbg: rgba(0, 0, 0, 0.4);
+  --efu-maskbgdeep: rgba(0, 0, 0, 0.6);
+  --efu-hovertext: var(--main-color, #3b82f6);
+  --style-border: 1px solid var(--main-card-border, #e5e7eb);
+  --style-border-always: 1px solid var(--main-card-border, #e5e7eb);
+  --style-border-hover: 1px solid var(--main-color, #3b82f6);
+  --style-border-hover-always: 1px solid var(--main-color, #3b82f6);
+}
+
+// ==================== 页面容器 ====================
+#about-page {
+  display: flex;
+  padding-top: 1rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  animation: slide-in 0.6s 0s backwards;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
+}
+
+// ==================== 动画 ====================
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floating {
+  0%, 100% {
+    transform: translate(0, -4px);
+  }
+  50% {
+    transform: translate(0, 4px);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes rowleft-quarter {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes progressAnimation {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: var(--progress-percentage, 0);
+  }
+}
+
+@keyframes pastTimeAnimation {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: var(--past-time-percentage, 0);
+  }
+}
+
+// ==================== 通用卡片样式 ====================
+.author-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 0.5rem;
+  gap: 0.5rem;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.author-content-item {
+  border-radius: 12px;
+  background: var(--efu-card-bg);
+  border: var(--style-border-always);
+  box-shadow: var(--efu-shadow-lightblack);
+  position: relative;
+  padding: 1rem 2rem;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 100% !important;
+  }
+
+  &.single {
+    width: 100%;
+  }
+}
+
+.author-content-item-tips {
+  opacity: 0.8;
+  font-size: 0.6rem;
+  margin-bottom: 0.5rem;
+  color: var(--efu-fontcolor);
+}
+
+.author-content-item-title {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--efu-fontcolor);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+// ==================== 暗色模式适配 ====================
+[data-theme='dark'] {
+  --efu-fontcolor: var(--main-font-color, #f9fafb);
+  --efu-background: var(--main-site-background, #111827);
+  --efu-card-bg: var(--main-card-background, #1f2937);
+  --efu-secondbg: var(--main-card-second-background, #374151);
+  --efu-secondtext: var(--main-font-second-color, #9ca3af);
+  --efu-shadow-border: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --efu-shadow-lightblack: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --efu-shadow-light2black: 0 8px 16px rgba(0, 0, 0, 0.4);
+  --style-border: 1px solid var(--main-card-border, #374151);
+  --style-border-always: 1px solid var(--main-card-border, #374151);
+}
+
+// ==================== 页面加载动画 ====================
+.about-page-loaded {
+  #about-page {
+    animation: slide-in 0.6s 0s backwards;
+  }
+}

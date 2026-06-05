@@ -2,14 +2,14 @@
   <footer id="main-footer" class="main-footer">
     <div class="footer-content">
       <div class="copyright">
-        <span class="time">@ 2025 - {{ thisYear }} By </span>
+        <span class="time">@ 2024 - {{ thisYear }} By </span>
         <a :href="theme.siteMeta.author.link" class="author link" target="_blank">
           {{ theme.siteMeta.author.name }}
         </a>
-        <a class="icp link" href="https://icp.gov.moe/?keyword=20259222" target="_blank">
+        <!-- <a class="icp link" href="https://icp.gov.moe/?keyword=20259222" target="_blank">
           <i class="iconfont icon-safe" />
           {{ theme.icp }}
-        </a>
+        </a> -->
         <SystemStatus />
       </div>
       <div class="meta">
@@ -36,10 +36,10 @@
           <i class="iconfont icon-nc-line" />
           <i class="iconfont icon-nd-line" />
         </a>
-        <a class="notbyai link" href="https://notbyai.fyi/" target="_blank">
+        <!-- <a class="notbyai link" href="https://notbyai.fyi/" target="_blank">
           <img class="light-badge" src="/notbyai/Written-By-Human-Not-By-AI-Badge-white.svg" alt="Written By Human" />
           <img class="dark-badge" src="/notbyai/Written-By-Human-Not-By-AI-Badge-black.svg" alt="Written By Human" />
-        </a>
+        </a> -->
       </div>
     </div>
   </footer>

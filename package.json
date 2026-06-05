@@ -21,7 +21,8 @@
     "dev": "vitepress dev --host",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "deploy:vercel": "vercel deploy"
+    "deploy:vercel": "vercel deploy",
+    "gen:friend": "node scripts/generate-friend-json.mjs"
   },
   "devDependencies": {
     "@vercel/node": "^5.7.15",
