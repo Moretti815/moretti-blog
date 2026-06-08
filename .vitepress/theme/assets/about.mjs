@@ -84,7 +84,7 @@ export const aboutData = {
   careers: {
     title: "教育经历",
     subtitle: "教育经历",
-    image: "/timeline.png",
+    // image: "/timeline.png",
     items: [
       { school: "南京工业职业技术大学", major: "自动化技术与应用", color: "#3b82f6" },
       { school: "王淦昌高级中学", major: "理科", color: "#10b981" },
@@ -158,28 +158,34 @@ export const aboutData = {
   likes: [
     {
       type: "comic",
-      tips: "动漫",
-      title: "二次元世界",
-      subtips: "追番记录",
-      //   bg: "https://jsd.268682.xyz/gh/Kemeow0815/img@main/img/bg.webp",
-      button: true,
-      button_link: "https://bangumi.tv/user/kemiao#",
-      button_text: "查看更多",
+      tips: "爱好番剧",
+      title: "追番",
       list: [
         {
           name: "进击的巨人",
           cover: "https://lain.bgm.tv/r/400/pic/cover/l/78/c9/55770_HsJfh.jpg",
+          url: "https://bangumi.tv/subject/55770",
         },
         {
           name: "JOJO 石之海",
           cover: "https://lain.bgm.tv/r/400/pic/cover/l/d6/4f/332261_szZEK.jpg",
+          url: "https://bangumi.tv/subject/332261",
         },
-        { name: "咒术回战", cover: "https://lain.bgm.tv/r/400/pic/cover/l/60/fe/294993_JrrzK.jpg" },
+        {
+          name: "咒术回战",
+          cover: "https://lain.bgm.tv/r/400/pic/cover/l/60/fe/294993_JrrzK.jpg",
+          url: "https://bangumi.tv/subject/294993",
+        },
         {
           name: "诡秘之主 小丑篇",
           cover: "https://lain.bgm.tv/r/400/pic/cover/l/ed/4a/345824_7Q33d.jpg",
+          url: "https://bangumi.tv/subject/345824",
         },
-        { name: "一人之下", cover: "https://lain.bgm.tv/r/400/pic/cover/l/e4/6d/175457_rNBX8.jpg" },
+        {
+          name: "一人之下",
+          cover: "https://lain.bgm.tv/r/400/pic/cover/l/e4/6d/175457_rNBX8.jpg",
+          url: "https://bangumi.tv/subject/175457",
+        },
       ],
     },
     {
@@ -260,12 +266,12 @@ export const aboutData = {
     more: "#",
   },
   rewardList: [
-    { name: "小明", money: 50, time: 1704067200000, color: "#f59e0b", icon: "☕" },
-    { name: "小红", money: 20, time: 1704153600000, color: "#10b981", icon: "🌟" },
-    { name: "张三", money: 100, time: 1704240000000, color: "#6366f1", icon: "🚀" },
-    { name: "李四", money: 30, time: 1704326400000, color: "#ec4899", icon: "💖" },
-    { name: "王五", money: 10, time: 1704412800000, color: "#8b5cf6", icon: "🎁" },
-    { name: "赵六", money: 66, time: 1704499200000, color: "#f97316", icon: "🔥" },
+    { name: "小明", money: 50, time: "2026-06-06" },
+    { name: "小红", money: 20, time: "2026-06-05" },
+    { name: "张三", money: 100, time: "2026-06-04" },
+    { name: "李四", money: 30, time: "2026-06-03" },
+    { name: "王五", money: 10, time: "2026-06-02" },
+    { name: "赵六", money: 66, time: "2026-06-01" },
   ],
 };
 

@@ -1,11 +1,11 @@
 <template>
   <div class="author-content">
     <!-- 技能卡片 -->
-    <div class="author-content-item skills" v-if="skills">
+    <div class="author-content-item skills" v-if="skills" :class="{ 'show-list': showSkillList }">
       <div class="card-content">
         <div class="author-content-item-tips">{{ skills.title }}</div>
         <span class="author-content-item-title">{{ skills.subtitle }}</span>
-        <div class="skills-style-group">
+        <div class="skills-style-group" @click="toggleSkillList">
           <div class="tags-group-all">
             <div class="tags-group-wrapper">
               <div
@@ -110,7 +110,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
   skills: {
@@ -122,6 +122,17 @@ const props = defineProps({
     default: null
   }
 });
+
+// 控制技能列表显示状态（仅移动端使用）
+const showSkillList = ref(false);
+
+// 切换技能列表显示
+const toggleSkillList = () => {
+  // 仅在移动端点击时切换
+  if (window.innerWidth <= 768) {
+    showSkillList.value = !showSkillList.value;
+  }
+};
 
 // 将技能标签分成对 - 参考 AstraBay 的循环逻辑
 const skillPairs = computed(() => {
@@ -174,8 +185,8 @@ const skillPairs = computed(() => {
 // 技能卡片样式 - 完全复刻 AstraBay
 .skills {
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   min-height: auto;
   flex: 1;
@@ -186,6 +197,7 @@ const skillPairs = computed(() => {
     height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
   }
 
   .tags-group-all {
@@ -219,16 +231,83 @@ const skillPairs = computed(() => {
     flex-direction: row;
     margin-top: 10px;
     z-index: 10;
+    min-height: 120px;
   }
 
-  &:hover {
+  // 桌面端悬停效果
+  @media (min-width: 769px) {
+    &:hover {
+      .skills-style-group {
+        .tags-group-all {
+          opacity: 0;
+        }
+
+        .skills-list {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  // 移动端默认显示轮播，点击后显示列表
+  @media (max-width: 768px) {
+    justify-content: center;
+    align-items: center;
+
     .skills-style-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 150px;
+      cursor: pointer;
+
+      // 移动端禁用悬停效果，使用点击切换
+      &:hover {
+        .tags-group-all {
+          opacity: 1;
+          display: flex !important;
+        }
+        .skills-list {
+          opacity: 0;
+          display: none;
+        }
+      }
+
       .tags-group-all {
-        opacity: 0;
+        opacity: 1;
+        display: flex !important;
+        position: relative;
+        transform: none;
       }
 
       .skills-list {
-        opacity: 1;
+        opacity: 0;
+        position: absolute;
+        display: none;
+        pointer-events: none;
+        transform: none;
+      }
+    }
+
+    // 点击后显示列表
+    &.show-list {
+      .skills-style-group {
+        .tags-group-all {
+          opacity: 0;
+          display: none !important;
+          position: absolute;
+          transform: none;
+        }
+
+        .skills-list {
+          opacity: 1;
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          pointer-events: auto;
+          transform: none;
+        }
       }
     }
   }
@@ -341,7 +420,7 @@ const skillPairs = computed(() => {
   // 时间轴样式
   .timeline-container {
     margin-top: 0;
-    padding: 10px 0 20px;
+    padding: 10px 0 30px;
     width: 100%;
     overflow: visible;
   }
@@ -349,13 +428,13 @@ const skillPairs = computed(() => {
   .timeline-wrapper {
     position: relative;
     width: 100%;
-    height: 110px;
+    height: 130px;
   }
 
   // 时间轴线
   .timeline-line {
     position: absolute;
-    top: 55px;
+    top: 75px;
     left: 0;
     right: 0;
     height: 4px;
@@ -366,12 +445,13 @@ const skillPairs = computed(() => {
   // 年份标记
   .timeline-years {
     position: absolute;
-    top: 64px;
+    top: 84px;
     left: 0;
     right: 0;
     display: flex;
     justify-content: space-between;
     padding: 0 10px;
+    z-index: 5;
 
     .year-mark {
       font-size: 12px;
@@ -380,6 +460,17 @@ const skillPairs = computed(() => {
       padding: 2px 6px;
       border-radius: 4px;
       border: 1px solid var(--main-card-border);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      padding: 0 2px;
+
+      .year-mark {
+        font-size: 9px;
+        padding: 1px 2px;
+        transform: scale(0.9);
+      }
     }
   }
 
@@ -398,7 +489,7 @@ const skillPairs = computed(() => {
     height: 32px;
 
     &.edu {
-      top: 20px;
+      top: 15px;
       left: 8%;
       right: 15%;
 
@@ -416,12 +507,13 @@ const skillPairs = computed(() => {
     }
 
     &.blog {
-      top: 70px;
+      top: 55px;
       left: 35%;
       right: 30%;
 
       .event-label {
         color: #f59e0b;
+        top: -16px;
       }
 
       .event-bar {

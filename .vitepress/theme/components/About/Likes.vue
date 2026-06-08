@@ -2,34 +2,29 @@
   <div class="author-content" v-if="likes && likes.length > 0">
     <template v-for="(like, index) in likes" :key="`like-${index}`">
       <!-- 动漫卡片 -->
-      <div v-if="like.type === 'comic'" class="author-content-item comic">
+      <div v-if="like.type === 'comic'" class="author-content-item comic-content">
         <div class="card-content">
           <div class="author-content-item-tips">{{ like.tips }}</div>
-          <span class="author-content-item-title">{{ like.title }}</span>
-          <div class="content-bottom">
-            <div v-if="like.subtips" class="tips">{{ like.subtips }}</div>
-            <div v-if="like.button" class="banner-button-group">
-              <a class="banner-button" :href="like.button_link">
-                <i class="iconfont icon-circle-chevron-right"></i>
-                <span class="banner-button-text">{{ like.button_text }}</span>
-              </a>
-            </div>
+          <div class="author-content-item-title">{{ like.title }}</div>
+          <div class="comic-box">
+            <a
+              v-for="(item, i) in like.list"
+              :key="i"
+              class="comic-item"
+              :href="item.href || item.url"
+              rel="external nofollow noreferrer"
+              target="_blank"
+              :title="item.name || item.title"
+            >
+              <div class="comic-item-cover">
+                <img
+                  :src="item.cover"
+                  :alt="item.name || item.title"
+                  onerror="this.onerror=null;this.src='https://bu.dusays.com/2023/03/03/6401a79030db5.png'"
+                />
+              </div>
+            </a>
           </div>
-        </div>
-        <div class="comic-box">
-          <a
-            v-for="(item, i) in like.list"
-            :key="i"
-            class="comic-item"
-            :href="item.href"
-            target="_blank"
-            rel="noopener noreferrer"
-            :title="item.name"
-          >
-            <div class="comic-item-cover">
-              <img :src="item.cover" :alt="item.name" />
-            </div>
-          </a>
         </div>
       </div>
 
@@ -160,15 +155,27 @@ defineProps({
   }
 }
 
-// 动漫卡片样式
-.comic {
-  min-height: 400px;
-  color: #fff;
-  position: relative;
+// 动漫卡片样式 - 参考安知鱼原版
+.comic-content {
+  min-height: 300px;
+  overflow: hidden;
+  border-radius: 24px;
   background: var(--main-card-background);
+  border: 1px solid var(--main-card-border);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: all 0.3s ease;
+  animation: slide-in 0.6s 0.6s backwards;
+  flex: 1;
+  width: calc(50% - 0.25rem);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-height: 250px;
+  }
 
   &::after {
-    box-shadow: 0 -69px 203px 11px #04120f inset;
+    box-shadow: 0 -48px 203px 11px #fbe9b8 inset;
     position: absolute;
     content: '';
     width: 100%;
@@ -176,38 +183,58 @@ defineProps({
     top: 0;
     left: 0;
     pointer-events: none;
-    z-index: 1;
   }
 
-  // 确保 comic-box 可以接收鼠标事件
-  .comic-box {
-    pointer-events: auto;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-content {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    padding: 1rem 2rem;
   }
 
   .author-content-item-tips,
-  .author-content-item-title,
-  .content-bottom {
-    z-index: 3;
-    position: relative;
+  .author-content-item-title {
+    z-index: 2;
     color: #fff;
+    pointer-events: none;
+    position: relative;
+  }
+
+  .author-content-item-tips {
+    opacity: 0.8;
+    font-size: 12px;
+    margin-bottom: 0.5rem;
+  }
+
+  .author-content-item-title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 1rem;
   }
 
   .comic-box {
-    width: 130%;
-    height: 100%;
     display: flex;
+    width: 120%;
+    height: 100%;
     position: absolute;
     left: 50%;
     top: 0;
     transform: translateX(-50%);
-    z-index: 0;
-
-    @media (max-width: 1400px) {
-      width: 140%;
-    }
+    z-index: 1;
 
     @media (max-width: 768px) {
-      width: 120%;
+      width: 140%;
     }
   }
 
@@ -219,11 +246,11 @@ defineProps({
     transition: 0.8s;
     position: relative;
     overflow: hidden;
-    z-index: 0;
+    display: block;
+    text-decoration: none;
 
     &:hover {
       width: 46%;
-      z-index: 1;
 
       .comic-item-cover {
         left: 16%;
@@ -239,16 +266,29 @@ defineProps({
       width: 200%;
       transform: skew(10deg, 0deg);
       object-fit: cover;
-      transition: all 0.8s;
+      transition: scale 0.2s, all 0.8s;
 
       img {
         height: 100%;
         width: 100%;
         max-width: none;
+        border-radius: 0;
         object-fit: cover;
         transition: 0.8s;
       }
     }
+  }
+}
+
+// 动画效果
+@keyframes slide-in {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
@@ -278,8 +318,12 @@ defineProps({
   }
 
   &.like-music {
-    min-height: 400px;
+    min-height: 300px;
     overflow: hidden;
+
+    @media (max-width: 768px) {
+      min-height: 250px;
+    }
 
     &::after {
       box-shadow: 0 -69px 203px 11px #0e0e0e inset;

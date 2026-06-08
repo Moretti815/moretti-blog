@@ -6,7 +6,6 @@
       <p>{{ data.text }}</p>
       <div class="tenyear-timeline">
         <div class="progress" :style="{ '--progress-percentage': progressPercentage }"></div>
-        <div class="past-time" :style="{ '--past-time-percentage': progressPercentage }"></div>
         <div class="percentage-label" :style="{ left: `calc(${Math.min(Math.max(progress, 5), 95)}% - 35px)` }">{{ progress.toFixed(0) }}%</div>
       </div>
       <div class="time-labels">
@@ -149,32 +148,12 @@ onMounted(() => {
   animation: progressAnimation 2s linear forwards;
 }
 
-.past-time {
-  animation: pastTimeAnimation 3s linear forwards;
-  width: 2px;
-  height: 20px;
-  position: absolute;
-  transform-origin: left;
-  background: var(--efu-white, #fff);
-  top: 50%;
-  transform: translateY(-50%);
-}
-
 @keyframes progressAnimation {
   0% {
     width: 0;
   }
   100% {
     width: var(--progress-percentage, 0);
-  }
-}
-
-@keyframes pastTimeAnimation {
-  0% {
-    left: 0;
-  }
-  100% {
-    left: var(--past-time-percentage, 0);
   }
 }
 </style>

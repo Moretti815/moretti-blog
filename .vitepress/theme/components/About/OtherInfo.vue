@@ -94,42 +94,21 @@ const formatNumber = (num) => {
   return num.toString();
 };
 
-// 获取 Umami 统计数据
+// 获取 Umami 统计数据（通过代理 API）
 const fetchUmamiStats = async () => {
-  if (!props.tj?.url || !props.tj?.websiteId) return;
-
   try {
-    const websiteId = props.tj.websiteId;
-    const baseUrl = props.tj.url.replace(/\/$/, '');
-
-    // 获取今日数据
-    const todayRes = await fetch(`${baseUrl}/api/websites/${websiteId}/stats?startAt=${Date.now() - 86400000}&endAt=${Date.now()}`);
-    const todayData = await todayRes.json();
-
-    // 获取昨日数据
-    const yesterdayStart = new Date();
-    yesterdayStart.setDate(yesterdayStart.getDate() - 1);
-    yesterdayStart.setHours(0, 0, 0, 0);
-    const yesterdayEnd = new Date(yesterdayStart);
-    yesterdayEnd.setHours(23, 59, 59, 999);
-
-    const yesterdayRes = await fetch(`${baseUrl}/api/websites/${websiteId}/stats?startAt=${yesterdayStart.getTime()}&endAt=${yesterdayEnd.getTime()}`);
-    const yesterdayData = await yesterdayRes.json();
-
-    // 获取最近30天数据
-    const monthStart = new Date();
-    monthStart.setDate(monthStart.getDate() - 30);
-    monthStart.setHours(0, 0, 0, 0);
-    const monthRes = await fetch(`${baseUrl}/api/websites/${websiteId}/stats?startAt=${monthStart.getTime()}&endAt=${Date.now()}`);
-    const monthData = await monthRes.json();
+    // 使用代理 API 获取数据
+    const response = await fetch('https://umami-blog-curve.2005815.xyz/');
+    const data = await response.json();
+    console.log('Umami Stats Data:', data);
 
     // 更新统计数据
     statsData.value = {
-      today_uv: { label: '今日人数', value: formatNumber(todayData?.visitors?.value || 0) },
-      today_pv: { label: '今日访问', value: formatNumber(todayData?.pageviews?.value || 0) },
-      yesterday_uv: { label: '昨日人数', value: formatNumber(yesterdayData?.visitors?.value || 0) },
-      yesterday_pv: { label: '昨日访问', value: formatNumber(yesterdayData?.pageviews?.value || 0) },
-      last_month_pv: { label: '最近月访问', value: formatNumber(monthData?.pageviews?.value || 0) }
+      today_uv: { label: '今日人数', value: formatNumber(data?.today_uv ?? 0) },
+      today_pv: { label: '今日访问', value: formatNumber(data?.today_pv ?? 0) },
+      yesterday_uv: { label: '昨日人数', value: formatNumber(data?.yesterday_uv ?? 0) },
+      yesterday_pv: { label: '昨日访问', value: formatNumber(data?.yesterday_pv ?? 0) },
+      last_month_pv: { label: '最近月访问', value: formatNumber(data?.last_month_pv ?? 0) }
     };
   } catch (err) {
     console.error('Failed to fetch Umami stats:', err);
@@ -169,13 +148,12 @@ onMounted(() => {
   // 标记为客户端环境
   isClient.value = true;
 
-  if (!props.tj) return;
-
   // 使用 nextTick 确保水合完成后再获取数据
   nextTick(() => {
-    if (props.tj.provider === 'umami') {
+    // 优先使用代理 API 获取 Umami 数据
+    if (props.tj?.provider === 'umami') {
       fetchUmamiStats();
-    } else if (props.tj.provider === 'custom' && props.tj.url) {
+    } else if (props.tj?.provider === 'custom' && props.tj?.url) {
       fetchCustomStats();
     }
   });

@@ -60,5 +60,5 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-@import '../styles/about.scss';
+@use '../styles/about.scss';
 </style>

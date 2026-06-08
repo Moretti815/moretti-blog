@@ -100,15 +100,21 @@ defineProps({
     bottom: -2rem;
     transition: transform 2s cubic-bezier(0.13, 0.45, 0.21, 1.02);
     user-select: none;
+    z-index: 1;
 
     @media (max-width: 768px) {
-      right: -40px;
-      bottom: -1rem;
+      right: -60px;
+      bottom: 20px;
+      z-index: 0;
     }
 
     img {
       max-width: 280px;
       height: auto;
+
+      @media (max-width: 768px) {
+        max-width: 200px;
+      }
     }
   }
 
@@ -119,12 +125,12 @@ defineProps({
   }
 
   .post-tips {
-    position: absolute;
-    bottom: 1rem;
-    left: 2rem;
+    position: relative;
+    margin-top: 1rem;
     font-size: 0.75rem;
     color: var(--efu-secondtext, var(--main-font-second-color));
     z-index: 2;
+    padding: 4px 0;
 
     a {
       color: var(--efu-main, var(--main-color));

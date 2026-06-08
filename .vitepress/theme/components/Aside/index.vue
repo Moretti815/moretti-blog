@@ -3,6 +3,7 @@
     <Hello v-if="theme.aside.hello.enable" class="weidgets" />
     <div class="sticky">
       <Toc v-if="theme.aside.toc.enable && showToc" class="weidgets" />
+     <TimetableCard class="weidgets" />
   <Weather
     v-if="theme.aside.weather.enable && showWeather"
     class="weidgets"
@@ -22,6 +23,8 @@
 </template>
 
 <script setup>
+import TimetableCard from './Widgets/TimetableCard.vue'
+
 const { theme } = useData();
 const props = defineProps({
   // 显示目录

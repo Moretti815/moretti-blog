@@ -12,7 +12,7 @@
       :future="{
         preserveSharedStateOnUnmount: true,
       }"
-      index-name="chiyu_it_0f1duc8max_pages"
+      index-name="博客"
       @state-change="searchChange"
     >
       <ais-configure :hits-per-page.camel="8" />

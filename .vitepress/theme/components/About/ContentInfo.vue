@@ -18,8 +18,8 @@
             :class="{
               'first-tips': index === 0,
             }"
-            :data-show="currentMask === index ? '' : null"
-            :data-up="currentMask === (index - 1 + data.mask.length) % data.mask.length ? '' : null"
+            :data-show="index === currentMask ? '' : null"
+            :data-up="index === (currentMask - 1 + data.mask.length) % data.mask.length ? '' : null"
           >
             {{ item }}
           </span>
@@ -51,6 +51,9 @@ const currentMask = ref(0);
 let pursuitInterval = null;
 
 onMounted(() => {
+  // 初始化时显示第一个
+  currentMask.value = 0;
+
   pursuitInterval = setInterval(() => {
     currentMask.value = (currentMask.value + 1) % props.data.mask.length;
   }, 2000);
@@ -163,14 +166,16 @@ onUnmounted(() => {
       background-clip: text;
       -webkit-text-fill-color: transparent;
       background-repeat: no-repeat;
-      transition: 0.5s transform ease-in-out;
+      transform: translateY(0);
 
       &[data-show] {
         transform: translateY(-100%);
+        transition: 0.5s transform ease-in-out;
       }
 
       &[data-up] {
         transform: translateY(-200%);
+        transition: 0.5s transform ease-in-out;
       }
 
       &:nth-child(1) {

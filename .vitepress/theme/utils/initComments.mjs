@@ -1,12 +1,13 @@
 import { loadScript, loadCSS } from "./commonTools.mjs";
 
 const initComments = async (themeConfig) => {
+  // 必要数据
+  const option = themeConfig.comment;
+  const commentType = option?.type;
+
   try {
-    // 必要数据
-    const option = themeConfig.comment;
-    const commentType = option.type;
-    if (!option.enable) return false;
-    const server = option[commentType].server;
+    if (!option?.enable) return false;
+    const server = option[commentType]?.server;
     console.log("开始加载", commentType, server);
     switch (commentType) {
       case "artalk":
@@ -40,7 +41,7 @@ const initComments = async (themeConfig) => {
         return false;
     }
   } catch (error) {
-    console.error(`${commentType} 初始化失败`, error);
+    console.error(`${commentType || "评论"} 初始化失败`, error);
     throw error;
   }
 };

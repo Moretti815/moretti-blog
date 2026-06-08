@@ -25,7 +25,7 @@ export const themeConfig = {
   // 建站日期
   since: "2024-11-01",
   // 每页文章数据
-  postSize: 5,
+  postSize: 8,
   // inject
   inject: {
     // 头部
@@ -103,14 +103,21 @@ export const themeConfig = {
         { text: "全部标签", link: "/pages/tags", icon: "hashtag" },
       ],
     },
-    // {
-    // text: "专栏",
-    // items: [
-    //  { text: "技术分享", link: "/pages/categories/技术分享", icon: "technical" },
-    //  { text: "我的项目", link: "/pages/project", icon: "code" },
-    //  { text: "效率工具", link: "/pages/tools", icon: "tools" },
-    //  ],
-    //   },
+    {
+      text: "专栏",
+      items: [
+        { text: "我的装备", link: "/pages/equipment", icon: "tools" },
+        { text: "课程表", link: "/pages/timetable", icon: "calendar" },
+        // { text: "技术分享", link: "/pages/categories/技术分享", icon: "technical" },
+        // { text: "我的项目", link: "/pages/project", icon: "code" },
+        // { text: "效率工具", link: "/pages/tools", icon: "tools" },
+      ],
+    },
+    {
+      text: "相册",
+      link: "/pages/albums",
+      icon: "image",
+    },
     {
       text: "友链",
       items: [
@@ -121,7 +128,7 @@ export const themeConfig = {
     {
       text: "我的",
       items: [
-        //{ text: "畅所欲言", link: "/pages/message", icon: "chat" },
+        { text: "畅所欲言", link: "/pages/message", icon: "chat" },
         //{ text: "致谢名单", link: "/pages/thanks", icon: "reward" },
         { text: "关于本站", link: "/pages/about", icon: "contacts" },
       ],
@@ -155,7 +162,7 @@ export const themeConfig = {
         {
           icon: "/images/uptime-favicon.ico",
           name: "检测",
-          url: "https://status.chiyu.it",
+          url: "https://status.2005815.xyz/",
         },
         // {
         //   icon: "/images/logo/logo.webp",
@@ -199,27 +206,23 @@ export const themeConfig = {
     social: [
       {
         icon: "email",
-        link: "mailto:kazukokawagawa@qq.com",
+        link: "https://s.2005815.xyz/mail",
       },
       {
         icon: "github",
-        link: "https://www.github.com/kazukokawagawa/",
+        link: "https://s.2005815.xyz/github",
       },
       {
         icon: "telegram",
-        link: "https://t.me/Chiyuyu1314",
+        link: "https://s.2005815.xyz/telegram",
       },
       {
         icon: "bilibili",
-        link: "https://space.bilibili.com/546803670",
+        link: "https://s.2005815.xyz/bilibili",
       },
       {
         icon: "qq",
-        link: "https://res.abeim.cn/api/qq/?qq=3985726818",
-      },
-      {
-        icon: "twitter-x",
-        link: "https://twitter.com/Chiyuyu520",
+        link: "https://s.2005815.xyz/qq",
       },
     ],
     // sitemap
@@ -263,7 +266,7 @@ export const themeConfig = {
       },
       {
         text: "服务",
-        items: [{ text: "站点状态", link: "https://status.chiyu.it", newTab: true }],
+        items: [{ text: "站点状态", link: "https://status.2005815.xyz", newTab: true }],
       },
     ],
     // 页脚徽标
@@ -299,8 +302,8 @@ export const themeConfig = {
     // https://twikoo.js.org/
     twikoo: {
       // 必填，若不想使用 CDN，可以使用 pnpm add twikoo 安装并引入
-      js: "https://cdn.jsdelivr.net/npm/twikoo@1.6.42/dist/twikoo.all.min.js",
-      envId: "https://twikoo.20100907.xyz",
+      js: "https://cdn.jsdelivr.net/npm/twikoo@1.7.11/dist/twikoo.all.min.js",
+      envId: "https://twikoo-curve.2005815.xyz",
       // 环境地域，默认为 ap-shanghai，腾讯云环境填 ap-shanghai 或 ap-guangzhou；Vercel 环境不填
       region: "",
       lang: "zh-CN",
@@ -385,9 +388,9 @@ export const themeConfig = {
   // 搜索
   // https://www.algolia.com/
   search: {
-    enable: false,
-    appId: "0F1DUC8MAX",
-    apiKey: "1f97c9169943484cfb9a05c825851ca4",
+    enable: true,
+    appId: "NGBNLRYK8X",
+    apiKey: "9f72889a663caf95ddfc73a50c799774",
   },
   // 天气 Key
   // 请前往 高德开放平台注册 Web服务 Key
@@ -401,9 +404,9 @@ export const themeConfig = {
   rewardData: {
     enable: true,
     // 微信二维码
-    wechat: "https://raw.20100907.xyz/pic/pay/wx.webp",
+    wechat: "/reward/weixin.avif",
     // 支付宝二维码
-    alipay: "https://raw.20100907.xyz/pic/pay/zfb.webp",
+    alipay: "/reward/alipay.avif",
   },
   // 图片灯箱
   fancybox: {
@@ -451,5 +454,42 @@ export const themeConfig = {
     source: "jike",
     // 显示数量
     limit: 5,
+  },
+  // 信封留言板配置
+  // https://github.com/Akilarlxh/hexo-butterfly-envelope
+  envelope: {
+    // 是否启用
+    enable: true,
+    // 信笺头部图片
+    cover: "https://npm.elemecdn.com/hexo-butterfly-envelope/lib/violet.jpg",
+    // 信笺底部图片
+    line: "https://npm.elemecdn.com/hexo-butterfly-envelope/lib/line.png",
+    // 信封前半部分
+    beforeimg: "https://npm.elemecdn.com/hexo-butterfly-envelope/lib/before.png",
+    // 信封后半部分
+    afterimg: "https://npm.elemecdn.com/hexo-butterfly-envelope/lib/after.png",
+    // 信笺正文，多行文本
+    message: [
+      "有什么想问的？",
+      "有什么想说的？",
+      "有什么想吐槽的？",
+      "哪怕是有什么想吃的，都可以告诉我哦~",
+    ],
+    // 底部文本，仅支持单行
+    bottom: "自动书记人偶竭诚为您服务！",
+    // 信封划出的高度，默认1024px
+    height: "1024px",
+  },
+  // 相册配置
+  // 参考: https://github.com/anzhiyu-c/hexo-theme-anzhiyu
+  album: {
+    // 是否启用
+    enable: true,
+    // 相册列表页面顶部背景图
+    topBackground: "",
+    // 相册标题
+    title: "这里是我的相册集哦😯",
+    // 相册描述
+    description: "每一张照片都是一次美好的记忆。",
   },
 };
