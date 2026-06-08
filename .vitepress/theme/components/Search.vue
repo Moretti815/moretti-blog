@@ -95,7 +95,12 @@ const initDocsearch = async () => {
     // 搜索结果点击
     navigator: {
       navigate: ({ itemUrl }) => {
-        window.location.href = itemUrl;
+        // 恢复 body 滚动
+        document.body.style.overflow = "";
+        document.body.classList.remove("DocSearch--active");
+        // 使用 Vue Router 导航
+        const router = useRouter();
+        router.go(itemUrl);
       },
     },
   });
