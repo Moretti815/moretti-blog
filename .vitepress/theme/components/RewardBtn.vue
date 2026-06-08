@@ -58,10 +58,10 @@
 // 赞赏显示
  const rewardShow = ref(false);
 
-  //跳转至赞赏名单
+  //跳转至关于页面
   const toRewardList = () => {
    rewardShow.value = false;
-   // router.go("/pages/thanks");
+   router.go("/pages/about");
  };
 </script>
 
