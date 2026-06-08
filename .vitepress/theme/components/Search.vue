@@ -5,7 +5,7 @@
 
 <script setup>
 import { mainStore } from "@/store";
-import { onMounted, watch } from "vue";
+import { onMounted, watch, onUnmounted } from "vue";
 
 const store = mainStore();
 let docsearchInstance = null;
@@ -13,6 +13,16 @@ let isInitialized = false;
 
 const { theme } = useData();
 const searchConfig = theme.value.search || {};
+
+// 恢复页面滚动的函数
+const restoreScroll = () => {
+  if (typeof document === "undefined") return;
+  document.body.style.overflow = "";
+  document.body.style.height = "";
+  document.body.classList.remove("DocSearch--active");
+  document.documentElement.style.overflow = "";
+  document.documentElement.style.height = "";
+};
 
 // 动态导入 docsearch
 const initDocsearch = async () => {
@@ -91,16 +101,20 @@ const initDocsearch = async () => {
     // 搜索关闭时的回调
     onClose: () => {
       store.searchShow = false;
+      restoreScroll();
     },
     // 搜索结果点击
     navigator: {
       navigate: ({ itemUrl }) => {
         // 恢复 body 滚动
-        document.body.style.overflow = "";
-        document.body.classList.remove("DocSearch--active");
+        restoreScroll();
         // 使用 Vue Router 导航
         const router = useRouter();
-        router.go(itemUrl);
+        if (router && router.go) {
+          router.go(itemUrl);
+        } else {
+          window.location.href = itemUrl;
+        }
       },
     },
   });
@@ -128,6 +142,8 @@ onMounted(() => {
   if (searchConfig.enable) {
     initDocsearch();
   }
+  // 每次挂载时恢复滚动
+  restoreScroll();
 });
 </script>
 
