@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@docsearch/css':
+        specifier: ^4.6.3
+        version: 4.6.3
+      '@docsearch/js':
+        specifier: ^4.6.3
+        version: 4.6.3
       '@types/node':
         specifier: ^22.19.17
         version: 22.19.17
@@ -722,8 +728,14 @@ packages:
   '@docsearch/css@3.8.2':
     resolution: {integrity: sha512-y05ayQFyUmCXze79+56v/4HpycYF3uFqB78pLPrSV5ZKAlDuIAAJNhaRi8tTdRNXh05yxX/TyNnzD6LwSM89vQ==}
 
+  '@docsearch/css@4.6.3':
+    resolution: {integrity: sha512-nlOwcXcsNAptQl4vlL4MA78qNJKO0Qlds5GuBjCoePgkebTXLSf8Qt1oyZ3YBshYupKXG9VRGEsk1zr23d+bzQ==}
+
   '@docsearch/js@3.8.2':
     resolution: {integrity: sha512-Q5wY66qHn0SwA7Taa0aDbHiJvaFJLOJyHmooQ7y8hlwwQLQ/5WwCcoX0g7ii04Qi2DJlHsd0XXzJ8Ypw9+9YmQ==}
+
+  '@docsearch/js@4.6.3':
+    resolution: {integrity: sha512-qUIX2b4Apew3tv4F0qhmgShsl/Lfw4m6mqv/5/5dWNxwTcDdLMp2s3YwZ+NMGh3IKCg0pBaXm7Q5VdyU5Rj+cQ==}
 
   '@docsearch/react@3.8.2':
     resolution: {integrity: sha512-xCRrJQlTt8N9GU0DG4ptwHRkfnSnD/YpdeaXe02iKfqs97TkZJv60yE+1eq/tjPcVnTW8dP5qLP7itifFVV5eg==}
@@ -5405,6 +5417,8 @@ snapshots:
 
   '@docsearch/css@3.8.2': {}
 
+  '@docsearch/css@4.6.3': {}
+
   '@docsearch/js@3.8.2(@algolia/client-search@5.52.0)(react@19.2.5)(search-insights@2.17.3)':
     dependencies:
       '@docsearch/react': 3.8.2(@algolia/client-search@5.52.0)(react@19.2.5)(search-insights@2.17.3)
@@ -5415,6 +5429,8 @@ snapshots:
       - react
       - react-dom
       - search-insights
+
+  '@docsearch/js@4.6.3': {}
 
   '@docsearch/react@3.8.2(@algolia/client-search@5.52.0)(react@19.2.5)(search-insights@2.17.3)':
     dependencies:

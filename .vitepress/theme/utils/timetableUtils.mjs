@@ -1,13 +1,13 @@
 // 课程表工具函数
 
 const WEEKDAY_LABELS = {
-  1: '周一',
-  2: '周二',
-  3: '周三',
-  4: '周四',
-  5: '周五',
-  6: '周六',
-  7: '周日'
+  1: "周一",
+  2: "周二",
+  3: "周三",
+  4: "周四",
+  5: "周五",
+  6: "周六",
+  7: "周日",
 };
 
 /**
@@ -16,7 +16,7 @@ const WEEKDAY_LABELS = {
  * @returns {string|null} - 返回 RGB 格式或 null
  */
 export function parseArgbColor(raw) {
-  if (!raw || !raw.startsWith('#')) return null;
+  if (!raw || !raw.startsWith("#")) return null;
 
   // 处理 #AARRGGBB 格式
   if (raw.length === 9) {
@@ -63,8 +63,8 @@ function buildCourseColor(courseName, courseId, rawColor) {
  * @returns {Date|null}
  */
 function parseDateFromYmd(ymd) {
-  const parts = ymd.split('-').map(part => Number(part));
-  if (parts.length !== 3 || parts.some(part => !Number.isFinite(part))) {
+  const parts = ymd.split("-").map((part) => Number(part));
+  if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part))) {
     return null;
   }
   const [year, month, day] = parts;
@@ -113,7 +113,7 @@ function shouldShowDay(week, day, weekendDisplay, defaultShow) {
 
   // 如果有 weekendDisplay 配置，优先使用
   if (weekendDisplay && weekendDisplay.enabled) {
-    const dayMap = { 6: 'sat', 7: 'sun' };
+    const dayMap = { 6: "sat", 7: "sun" };
     const dayKey = dayMap[day];
 
     // 检查是否在指定天数列表中
@@ -144,20 +144,20 @@ function buildNodeRows(data) {
 
   if (timeTable && timeTable.length > 0) {
     return timeTable
-      .filter(item => item.node >= 1 && item.node <= nodes)
+      .filter((item) => item.node >= 1 && item.node <= nodes)
       .sort((a, b) => a.node - b.node)
-      .map(item => ({
+      .map((item) => ({
         node: item.node,
         startTime: item.startTime,
-        endTime: item.endTime
+        endTime: item.endTime,
       }));
   }
 
   // 默认节次
   return Array.from({ length: nodes }, (_, index) => ({
     node: index + 1,
-    startTime: '--:--',
-    endTime: '--:--'
+    startTime: "--:--",
+    endTime: "--:--",
   }));
 }
 
@@ -176,7 +176,7 @@ function buildDayColumns(data, currentWeek) {
     { day: 2, label: WEEKDAY_LABELS[2] },
     { day: 3, label: WEEKDAY_LABELS[3] },
     { day: 4, label: WEEKDAY_LABELS[4] },
-    { day: 5, label: WEEKDAY_LABELS[5] }
+    { day: 5, label: WEEKDAY_LABELS[5] },
   ];
 
   // 检查是否显示周六
@@ -202,21 +202,21 @@ function buildDayColumns(data, currentWeek) {
  */
 function buildCourseView(schedule, courseName, color, nodeRows) {
   const durationNodes = schedule.step || 2;
-  const maxNode = Math.max(...nodeRows.map(row => row.node), schedule.startNode);
+  const maxNode = Math.max(...nodeRows.map((row) => row.node), schedule.startNode);
   const endNode = Math.min(schedule.startNode + durationNodes - 1, maxNode);
 
-  const startNodeRow = nodeRows.find(row => row.node === schedule.startNode);
-  const endNodeRow = nodeRows.find(row => row.node === endNode);
+  const startNodeRow = nodeRows.find((row) => row.node === schedule.startNode);
+  const endNodeRow = nodeRows.find((row) => row.node === endNode);
 
-  const startTime = startNodeRow?.startTime ?? '--:--';
-  const endTime = endNodeRow?.endTime ?? '--:--';
+  const startTime = startNodeRow?.startTime ?? "--:--";
+  const endTime = endNodeRow?.endTime ?? "--:--";
 
   return {
     courseId: schedule.id,
     courseName,
     color,
-    teacher: schedule.teacher?.trim() || '未填写',
-    room: schedule.room?.trim() || '未填写',
+    teacher: schedule.teacher?.trim() || "未填写",
+    room: schedule.room?.trim() || "未填写",
     day: schedule.day,
     startNode: schedule.startNode,
     endNode,
@@ -224,7 +224,7 @@ function buildCourseView(schedule, courseName, color, nodeRows) {
     startWeek: schedule.startWeek,
     endWeek: schedule.endWeek,
     nodeText: `第 ${schedule.startNode}-${endNode} 节`,
-    timeText: `${startTime} - ${endTime}`
+    timeText: `${startTime} - ${endTime}`,
   };
 }
 
@@ -243,7 +243,7 @@ export function buildTimetableViewModel(data, selectedWeek) {
   const dayColumns = buildDayColumns(data, week);
 
   // 构建课程映射
-  const courseMap = new Map(courses.map(course => [course.id, course]));
+  const courseMap = new Map(courses.map((course) => [course.id, course]));
 
   // 初始化每天的课程数组
   const coursesByDay = {};
@@ -272,26 +272,24 @@ export function buildTimetableViewModel(data, selectedWeek) {
     const courseName = courseDef?.courseName ?? `课程 #${schedule.id}`;
     const color = buildCourseColor(courseName, schedule.id, courseDef?.color);
 
-    coursesByDay[schedule.day].push(
-      buildCourseView(schedule, courseName, color, nodeRows)
-    );
+    coursesByDay[schedule.day].push(buildCourseView(schedule, courseName, color, nodeRows));
   }
 
   // 对每天的课程按节次排序
   for (const day of Object.keys(coursesByDay)) {
     coursesByDay[Number(day)].sort(
-      (a, b) => a.startNode - b.startNode || a.courseName.localeCompare(b.courseName)
+      (a, b) => a.startNode - b.startNode || a.courseName.localeCompare(b.courseName),
     );
   }
 
   return {
-    tableName: settings.tableName || '课表',
+    tableName: settings.tableName || "课表",
     maxWeek,
     currentWeek: week,
     weeks: Array.from({ length: maxWeek }, (_, index) => index + 1),
     dayColumns,
     nodeRows,
-    coursesByDay
+    coursesByDay,
   };
 }
 

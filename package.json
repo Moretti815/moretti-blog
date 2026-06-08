@@ -49,6 +49,8 @@
     "vitepress-plugin-tabs": "^0.5.0"
   },
   "dependencies": {
+    "@docsearch/css": "^4.6.3",
+    "@docsearch/js": "^4.6.3",
     "@types/node": "^22.19.17",
     "@vite-pwa/vitepress": "^0.5.4",
     "@vueuse/core": "^11.3.0",

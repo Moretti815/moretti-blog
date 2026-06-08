@@ -389,9 +389,9 @@ export const themeConfig = {
   // https://www.algolia.com/
   search: {
     enable: true,
-    appId: "NGBNLRYK8X",
-      apiKey: "9f72889a663caf95ddfc73a50c799774",
-    indexName: "博客"
+    appId: "FNL358TX5Y",
+    apiKey: "7e04fff0970f2b1b323742dcc29ffb03",
+    indexName: "blog",
   },
   // 天气 Key
   // 请前往 高德开放平台注册 Web服务 Key
