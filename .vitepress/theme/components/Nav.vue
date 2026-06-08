@@ -124,6 +124,8 @@
     <ClientOnly>
       <Search v-if="theme.search.enable" />
     </ClientOnly>
+    <!-- DocSearch 挂载点 -->
+    <div id="docsearch-container" style="display: none;"></div>
   </header>
 </template>
 

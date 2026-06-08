@@ -1,18 +1,15 @@
 <!-- 全局搜索 - DocSearch -->
 <template>
-  <div id="docsearch-container" v-show="store.searchShow" class="docsearch-wrapper">
-    <div class="docsearch-mask" @click="store.changeShowStatus('searchShow')" />
-    <div id="docsearch" ref="docsearchRef" />
-  </div>
+  <!-- DocSearch 会自动创建模态框，这里不需要模板内容 -->
 </template>
 
 <script setup>
 import { mainStore } from "@/store";
-import { onMounted, ref, watch, nextTick } from "vue";
+import { onMounted, watch } from "vue";
 
 const store = mainStore();
-const docsearchRef = ref(null);
 let docsearchInstance = null;
+let isInitialized = false;
 
 const { theme } = useData();
 const searchConfig = theme.value.search || {};
@@ -24,15 +21,22 @@ const initDocsearch = async () => {
     return;
   }
 
+  if (isInitialized) return;
+  isInitialized = true;
+
   const docsearch = (await import("@docsearch/js")).default;
   await import("@docsearch/css");
 
   docsearchInstance = docsearch({
-    container: "#docsearch",
+    container: "#docsearch-container",
     appId: searchConfig.appId,
     apiKey: searchConfig.apiKey,
     indexName: searchConfig.indexName || "blog",
-    placeholder: "搜索文档",
+    placeholder: "搜索文章...",
+    // 禁用默认按钮，我们使用自定义触发
+    searchParameters: {
+      hitsPerPage: 10,
+    },
     translations: {
       button: {
         buttonText: "搜索",
@@ -84,14 +88,9 @@ const initDocsearch = async () => {
         };
       });
     },
-    // 搜索打开时的回调
-    onOpen: () => {
-      document.body.style.overflow = "hidden";
-    },
     // 搜索关闭时的回调
     onClose: () => {
-      document.body.style.overflow = "";
-      store.changeShowStatus("searchShow");
+      store.searchShow = false;
     },
     // 搜索结果点击
     navigator: {
@@ -107,23 +106,14 @@ watch(
   () => store.searchShow,
   async (val) => {
     if (val) {
-      await nextTick();
-      // 如果已经初始化，需要触发打开
-      if (docsearchInstance) {
-        const searchButton = document.querySelector(".DocSearch-Button");
+      await initDocsearch();
+      // 触发 DocSearch 打开
+      setTimeout(() => {
+        const searchButton = document.querySelector("#docsearch-container .DocSearch-Button");
         if (searchButton) {
           searchButton.click();
         }
-      } else {
-        await initDocsearch();
-        // 初始化后自动打开
-        setTimeout(() => {
-          const searchButton = document.querySelector(".DocSearch-Button");
-          if (searchButton) {
-            searchButton.click();
-          }
-        }, 100);
-      }
+      }, 50);
     }
   },
 );
@@ -137,253 +127,309 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-// DocSearch 自定义样式
-.docsearch-wrapper {
+// 隐藏默认的搜索按钮容器，但保留功能
+#docsearch-container {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+}
 
-  .docsearch-mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--main-mask-background);
-    z-index: -1;
+// DocSearch 模态框全局样式覆盖
+.DocSearch-Container {
+  --docsearch-text-color: var(--main-font-color);
+  --docsearch-muted-color: var(--main-font-second-color);
+  --docsearch-container-background: rgba(0, 0, 0, 0.6);
+  --docsearch-modal-background: var(--main-card-background);
+  --docsearch-modal-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --docsearch-searchbox-background: var(--main-card-second-background);
+  --docsearch-searchbox-focus-background: var(--main-card-second-background);
+  --docsearch-hit-color: var(--main-font-color);
+  --docsearch-hit-active-color: var(--main-font-color);
+  --docsearch-hit-background: var(--main-card-second-background);
+  --docsearch-hit-shadow: none;
+  --docsearch-key-gradient: linear-gradient(-225deg, var(--main-card-border), var(--main-card-background));
+  --docsearch-key-shadow: inset 0 -2px 0 0 var(--main-card-border), inset 0 0 1px 1px var(--main-card-border);
+  --docsearch-footer-background: var(--main-card-second-background);
+  --docsearch-footer-shadow: 0 -1px 0 0 var(--main-card-border);
+  --docsearch-logo-color: var(--main-color);
+  --docsearch-highlight-color: var(--main-color);
+
+  z-index: 9999;
+}
+
+// 模态框主体
+.DocSearch-Modal {
+  background-color: var(--main-card-background);
+  border: 1px solid var(--main-card-border);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  max-width: 720px;
+  margin: 60px auto auto;
+}
+
+// 搜索栏
+.DocSearch-SearchBar {
+  border-bottom: 1px solid var(--main-card-border);
+  padding: 16px;
+}
+
+// 搜索表单
+.DocSearch-Form {
+  background-color: var(--main-card-second-background);
+  border: 1px solid var(--main-card-border);
+  border-radius: 12px;
+  height: 48px;
+
+  &:focus-within {
+    border-color: var(--main-color);
+    box-shadow: 0 0 0 3px var(--main-color-bg);
   }
+}
 
-  // 隐藏默认的搜索按钮，因为我们使用自己的触发方式
-  .DocSearch-Button {
-    display: none;
-  }
+// 搜索图标
+.DocSearch-MagnifierLabel {
+  color: var(--main-font-second-color);
+  margin-left: 12px;
+}
 
-  // 调整搜索模态框样式
-  .DocSearch-Container {
-    position: relative;
-    z-index: 2001;
-  }
+// 搜索输入框
+.DocSearch-Input {
+  color: var(--main-font-color);
+  font-family: var(--main-font-family);
+  font-size: 16px;
+  padding: 0 12px;
 
-  // 适配暗色主题
-  .DocSearch-Modal {
-    background-color: var(--main-card-background);
-    border: 1px solid var(--main-card-border);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  }
-
-  .DocSearch-SearchBar {
-    border-bottom: 1px solid var(--main-card-border);
-  }
-
-  .DocSearch-Form {
-    background-color: var(--main-card-second-background);
-    border: 1px solid var(--main-card-border);
-
-    &:focus-within {
-      border-color: var(--main-color);
-      box-shadow: 0 0 0 2px var(--main-color-bg);
-    }
-  }
-
-  .DocSearch-Input {
-    color: var(--main-font-color);
-    font-family: var(--main-font-family);
-
-    &::placeholder {
-      color: var(--main-font-second-color);
-    }
-  }
-
-  .DocSearch-Reset {
+  &::placeholder {
     color: var(--main-font-second-color);
-
-    &:hover {
-      color: var(--main-color);
-    }
   }
+}
 
-  .DocSearch-Cancel {
+// 清除按钮
+.DocSearch-Reset {
+  color: var(--main-font-second-color);
+  margin-right: 8px;
+
+  &:hover {
     color: var(--main-color);
   }
+}
 
-  // 搜索结果列表
-  .DocSearch-Dropdown {
-    background-color: var(--main-card-background);
-  }
+// 取消按钮
+.DocSearch-Cancel {
+  color: var(--main-color);
+  font-size: 14px;
+  margin-left: 12px;
+}
 
-  .DocSearch-Hit {
-    border-radius: 8px;
+// 下拉区域
+.DocSearch-Dropdown {
+  background-color: var(--main-card-background);
+  padding: 0 16px 16px;
+  max-height: 500px;
+  overflow-y: auto;
+}
 
-    a {
-      background-color: var(--main-card-second-background);
-      border: 1px solid transparent;
-      border-radius: 8px;
+// 搜索结果项
+.DocSearch-Hit {
+  border-radius: 10px;
+  margin-bottom: 8px;
 
-      &:hover {
-        background-color: var(--main-color-bg);
-        border-color: var(--main-color);
-      }
-    }
-
-    &[aria-selected="true"] a {
-      background-color: var(--main-color-bg);
-      border-color: var(--main-color);
-    }
-  }
-
-  .DocSearch-Hit-source {
-    color: var(--main-font-color);
-    background-color: var(--main-card-background);
-    font-weight: 600;
-  }
-
-  .DocSearch-Hit-title {
-    color: var(--main-font-color);
-  }
-
-  .DocSearch-Hit-path {
-    color: var(--main-font-second-color);
-  }
-
-  .DocSearch-Hit-icon {
-    color: var(--main-font-second-color);
-  }
-
-  // 高亮样式
-  .DocSearch-Hit-Tree {
-    color: var(--main-font-second-color);
-  }
-
-  .DocSearch-Highlight {
-    color: var(--main-color);
-    background: transparent;
-    font-weight: 600;
-  }
-
-  // 无结果状态
-  .DocSearch-NoResults {
-    .DocSearch-Title {
-      color: var(--main-font-color);
-    }
-
-    .DocSearch-Help {
-      color: var(--main-font-second-color);
-    }
-  }
-
-  .DocSearch-Title strong {
-    color: var(--main-color);
-  }
-
-  // 开始屏幕
-  .DocSearch-StartScreen {
-    .DocSearch-Help {
-      color: var(--main-font-second-color);
-    }
-  }
-
-  .DocSearch-RecentSearches {
-    .DocSearch-Label {
-      color: var(--main-font-second-color);
-    }
-  }
-
-  .DocSearch-RecentSearches-Item {
+  a {
     background-color: var(--main-card-second-background);
     border: 1px solid transparent;
-    border-radius: 8px;
+    border-radius: 10px;
+    padding: 12px;
+    transition: all 0.2s ease;
 
     &:hover {
       background-color: var(--main-color-bg);
       border-color: var(--main-color);
     }
-
-    .DocSearch-DeleteIcon,
-    .DocSearch-FavoriteIcon {
-      color: var(--main-font-second-color);
-
-      &:hover {
-        color: var(--main-color);
-      }
-    }
   }
 
-  // 底部
-  .DocSearch-Footer {
-    background-color: var(--main-card-second-background);
-    border-top: 1px solid var(--main-card-border);
+  &[aria-selected="true"] a {
+    background-color: var(--main-color-bg);
+    border-color: var(--main-color);
+  }
+}
+
+// 搜索结果来源
+.DocSearch-Hit-source {
+  color: var(--main-font-color);
+  background-color: var(--main-card-background);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 0 8px;
+}
+
+// 搜索结果标题
+.DocSearch-Hit-title {
+  color: var(--main-font-color);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+// 搜索结果路径
+.DocSearch-Hit-path {
+  color: var(--main-font-second-color);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+// 搜索结果图标
+.DocSearch-Hit-icon {
+  color: var(--main-font-second-color);
+}
+
+// 树形结构
+.DocSearch-Hit-Tree {
+  color: var(--main-font-second-color);
+}
+
+// 高亮样式
+.DocSearch-Highlight {
+  color: var(--main-color);
+  background: transparent;
+  font-weight: 600;
+}
+
+// 无结果状态
+.DocSearch-NoResults {
+  padding: 40px 0;
+
+  .DocSearch-Title {
+    color: var(--main-font-color);
+    font-size: 16px;
   }
 
-  .DocSearch-Logo {
-    .DocSearch-Label {
-      color: var(--main-font-second-color);
-    }
+  .DocSearch-Help {
+    color: var(--main-font-second-color);
+    font-size: 14px;
+    margin-top: 8px;
+  }
+}
 
-    svg {
+.DocSearch-Title strong {
+  color: var(--main-color);
+}
+
+// 开始屏幕
+.DocSearch-StartScreen {
+  padding: 20px 0;
+
+  .DocSearch-Help {
+    color: var(--main-font-second-color);
+    font-size: 14px;
+  }
+}
+
+// 最近搜索
+.DocSearch-RecentSearches {
+  .DocSearch-Label {
+    color: var(--main-font-second-color);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.DocSearch-RecentSearches-Item {
+  background-color: var(--main-card-second-background);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  margin-top: 8px;
+
+  &:hover {
+    background-color: var(--main-color-bg);
+    border-color: var(--main-color);
+  }
+
+  .DocSearch-DeleteIcon,
+  .DocSearch-FavoriteIcon {
+    color: var(--main-font-second-color);
+
+    &:hover {
       color: var(--main-color);
     }
   }
+}
 
-  .DocSearch-Commands {
+// 底部
+.DocSearch-Footer {
+  background-color: var(--main-card-second-background);
+  border-top: 1px solid var(--main-card-border);
+  border-radius: 0 0 16px 16px;
+  padding: 12px 16px;
+}
+
+.DocSearch-Logo {
+  .DocSearch-Label {
     color: var(--main-font-second-color);
-
-    .DocSearch-Commands-Key {
-      background-color: var(--main-card-background);
-      border: 1px solid var(--main-card-border);
-      color: var(--main-font-color);
-    }
+    font-size: 12px;
   }
 
-  // 错误屏幕
-  .DocSearch-ErrorScreen {
-    .DocSearch-Title {
-      color: var(--main-font-color);
-    }
-
-    .DocSearch-Help {
-      color: var(--main-font-second-color);
-    }
+  svg {
+    color: var(--main-color);
   }
+}
 
-  // 屏幕阅读器
-  .DocSearch-Screen-Reader {
+.DocSearch-Commands {
+  color: var(--main-font-second-color);
+  font-size: 12px;
+
+  .DocSearch-Commands-Key {
+    background-color: var(--main-card-background);
+    border: 1px solid var(--main-card-border);
+    border-radius: 4px;
     color: var(--main-font-color);
+    padding: 2px 6px;
+    font-size: 11px;
   }
 }
 
-// 全局 DocSearch 样式覆盖（当模态框挂载到 body 时）
-.DocSearch--active {
-  body {
-    overflow: hidden;
+// 错误屏幕
+.DocSearch-ErrorScreen {
+  padding: 40px 0;
+
+  .DocSearch-Title {
+    color: var(--main-font-color);
+    font-size: 16px;
+  }
+
+  .DocSearch-Help {
+    color: var(--main-font-second-color);
+    font-size: 14px;
+    margin-top: 8px;
   }
 }
 
-// 暗色主题适配
-html.dark {
-  .DocSearch-Container {
-    --docsearch-text-color: var(--main-font-color);
-    --docsearch-muted-color: var(--main-font-second-color);
-    --docsearch-container-background: rgba(0, 0, 0, 0.8);
-    --docsearch-modal-background: var(--main-card-background);
-    --docsearch-modal-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    --docsearch-searchbox-background: var(--main-card-second-background);
-    --docsearch-searchbox-focus-background: var(--main-card-second-background);
-    --docsearch-hit-color: var(--main-font-color);
-    --docsearch-hit-active-color: var(--main-font-color);
-    --docsearch-hit-background: var(--main-card-second-background);
-    --docsearch-hit-shadow: none;
-    --docsearch-key-gradient: linear-gradient(-225deg, var(--main-card-border), var(--main-card-background));
-    --docsearch-key-shadow: none;
-    --docsearch-footer-background: var(--main-card-second-background);
-    --docsearch-footer-shadow: none;
-    --docsearch-logo-color: var(--main-color);
-    --docsearch-highlight-color: var(--main-color);
+// 屏幕阅读器
+.DocSearch-Screen-Reader {
+  color: var(--main-font-color);
+}
+
+// 加载状态
+.DocSearch-LoadingIndicator {
+  color: var(--main-color);
+}
+
+// 响应式适配
+@media (max-width: 768px) {
+  .DocSearch-Modal {
+    margin: 0;
+    border-radius: 0;
+    max-width: 100%;
+    height: 100vh;
+  }
+
+  .DocSearch-Footer {
+    border-radius: 0;
   }
 }
 </style>
