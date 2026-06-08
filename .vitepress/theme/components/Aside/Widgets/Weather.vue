@@ -61,7 +61,11 @@ onMounted(async () => {
   try {
     const { adcode }        = await getAdcode(import.meta.env.VITE_WEATHER_KEY)
     const { lives }         = await getWeather(import.meta.env.VITE_WEATHER_KEY, adcode)
-    weatherData.value       = lives[0]
+    if (Array.isArray(lives) && lives.length > 0) {
+      weatherData.value = lives[0]
+    } else {
+      throw new Error('天气数据格式错误')
+    }
   } catch (e) {
     console.error('获取天气失败：', e)
     error.value = true

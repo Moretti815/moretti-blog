@@ -120,12 +120,12 @@
     </nav>
     <!-- 移动端菜单 -->
     <MobileMenu />
-    <!-- 全局搜索 -->
+    <!-- 全局搜索 - 只在客户端渲染 -->
     <ClientOnly>
-      <Search v-if="theme.search.enable" />
+      <Search />
+      <!-- DocSearch 挂载点 -->
+      <div id="docsearch-container" style="display: none;"></div>
     </ClientOnly>
-    <!-- DocSearch 挂载点 -->
-    <div id="docsearch-container" style="display: none;"></div>
   </header>
 </template>
 
