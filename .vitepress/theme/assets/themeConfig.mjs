@@ -390,7 +390,8 @@ export const themeConfig = {
   search: {
     enable: true,
     appId: "NGBNLRYK8X",
-    apiKey: "9f72889a663caf95ddfc73a50c799774",
+      apiKey: "9f72889a663caf95ddfc73a50c799774",
+    indexName: "博客"
   },
   // 天气 Key
   // 请前往 高德开放平台注册 Web服务 Key

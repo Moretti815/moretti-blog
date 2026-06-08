@@ -10,7 +10,8 @@ const timetableData = ref(null);
 const viewModel = ref(null);
 const loading = ref(true);
 const error = ref(null);
-const currentTime = ref(new Date());
+// 使用 null 初始值，避免 SSR 水合不匹配
+const currentTime = ref(null);
 
 // 定时器
 let timer = null;
@@ -28,12 +29,14 @@ const WEEKDAY_LABELS = {
 
 // 当前是星期几 (1-7)
 const currentDay = computed(() => {
+  if (!currentTime.value) return 1;
   const day = currentTime.value.getDay();
   return day === 0 ? 7 : day;
 });
 
 // 当前时间（分钟数，从0点开始）
 const currentMinute = computed(() => {
+  if (!currentTime.value) return 0;
   return currentTime.value.getHours() * 60 + currentTime.value.getMinutes();
 });
 
@@ -306,6 +309,8 @@ function updateTime() {
 }
 
 onMounted(() => {
+  // 客户端初始化时间，避免 SSR 水合不匹配
+  currentTime.value = new Date();
   loadTimetableData();
   // 每秒更新一次时间
   timer = setInterval(updateTime, 1000);
