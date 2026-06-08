@@ -34,7 +34,7 @@
           </a>
         </div>
         <div v-if="showJump" class="all-list s-card hover" @click="toRewardList">
-          <span class="title">关于赞赏费用</span>
+          <span class="title">赞赏名单</span>
           <span class="tip">
             赞赏金额将全部用于开源项目维护，以及服务器、域名及各类作者生活的开销
           </span>
