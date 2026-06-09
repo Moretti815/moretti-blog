@@ -442,15 +442,50 @@ onMounted(() => {
 
 // 响应式适配
 @media (max-width: 768px) {
+  // 移动端容器调整
+  .DocSearch-Container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 60px;
+  }
+
   .DocSearch-Modal {
     margin: 0;
-    border-radius: 0;
-    max-width: 100%;
-    height: 100vh;
+    border-radius: 12px;
+    max-width: calc(100% - 32px);
+    width: 100%;
+    max-height: calc(100vh - 120px);
+    height: auto;
+    position: relative;
+    top: 0;
+  }
+
+  .DocSearch-SearchBar {
+    padding: 12px;
+  }
+
+  .DocSearch-Form {
+    height: 44px;
+  }
+
+  .DocSearch-Dropdown {
+    max-height: calc(100vh - 220px);
   }
 
   .DocSearch-Footer {
-    border-radius: 0;
+    border-radius: 0 0 12px 12px;
+    padding: 8px 12px;
+  }
+
+  // 隐藏键盘快捷键提示
+  .DocSearch-Commands {
+    display: none;
   }
 }
 </style>
