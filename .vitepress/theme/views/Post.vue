@@ -106,6 +106,8 @@
         <Comments ref="commentRef" />
       </article>
       <Aside showToc />
+      <!-- 手机端浮动目录按钮 -->
+      <MobileToc />
     </div>
   </div>
 </template>
@@ -115,6 +117,7 @@ import { formatTimestamp } from "@/utils/helper";
 import { generateId } from "@/utils/commonTools";
 import initFancybox from "@/utils/initFancybox";
 import PasswordProtect from "@/components/PasswordProtect.vue";
+import MobileToc from "@/components/MobileToc.vue";
 
 const { page, theme, frontmatter } = useData();
 

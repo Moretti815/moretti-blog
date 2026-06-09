@@ -33,6 +33,8 @@
       <!-- 全局播放器 -->
       <Player />
     </div>
+    <!-- 手机端快捷设置按钮 -->
+    <MobileControl />
   </Teleport>
   <!-- 右键菜单 -->
   <RightMenu ref="rightMenuRef" />
@@ -45,6 +47,7 @@ import { storeToRefs } from "pinia";
 import { mainStore, initializeCursor } from "@/store";
 import { calculateScroll, specialDayGray } from "@/utils/helper";
 import { ensureGlobalFontsLoaded } from "@/utils/fontLoader.mjs";
+import MobileControl from "@/components/MobileControl.vue";
 
 // const screenWidth = ref(0);
 const route = useRoute();
