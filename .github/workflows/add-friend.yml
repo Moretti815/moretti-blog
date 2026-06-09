@@ -1,0 +1,92 @@
+name: 添加友链
+
+on:
+    issue_comment:
+        types: [created]
+
+permissions:
+    contents: write
+    issues: write
+
+jobs:
+    add-friend:
+        # 仅在已关闭的 issue 上、且评论匹配 "已添加 "xxx"" 时触发
+        if: >
+            github.event.issue.state == 'closed' &&
+            contains(github.event.comment.body, '已添加')
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            # 从评论中提取分组名（已添加 "xxx"）
+            - name: Parse group name
+              id: parse
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const body = context.payload.comment.body;
+                      const match = body.match(/已添加\s*["""]([^"""]+)["""]/);
+                      if (!match) {
+                        core.setFailed('评论格式不正确，应为：已添加 "分组名"');
+                        return;
+                      }
+                      const groupName = match[1];
+                      core.setOutput('group', groupName);
+                      core.info(`提取到分组名: ${groupName}`);
+
+                      // 将 issue body 写入临时文件（避免 shell 特殊字符问题）
+                      const fs = require('fs');
+                      fs.writeFileSync('/tmp/issue_body.txt', context.payload.issue.body);
+
+                      // 提取 labels
+                      const labels = context.payload.issue.labels.map(l => l.name);
+                      fs.writeFileSync('/tmp/issue_labels.json', JSON.stringify(labels));
+                      core.info(`Labels: ${labels.join(', ')}`);
+
+            - name: Run add-friend script
+              id: run
+              working-directory: blog
+              run: |
+                  node scripts/github/add-friend.mjs \
+                    "/tmp/issue_body.txt" \
+                    "${{ steps.parse.outputs.group }}" \
+                    "$(cat /tmp/issue_labels.json)"
+
+            - name: Comment - 添加成功
+              if: success()
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      await github.rest.issues.createComment({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: context.issue.number,
+                        body: `✅ 友链已成功添加到 **${{ steps.parse.outputs.group }}** 分组`
+                      });
+
+            - name: Comment - 无此分组
+              if: failure() && steps.parse.outcome == 'success'
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      await github.rest.issues.createComment({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: context.issue.number,
+                        body: `❌ 无此分组 **${{ steps.parse.outputs.group }}**，请检查分组名称是否正确`
+                      });
+
+            - name: Commit and push
+              if: success()
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git add blog/.vitepress/theme/assets/linkData.mjs
+                  git commit -m "chore: 添加友链 #${{ github.event.issue.number }}"
+                  git push

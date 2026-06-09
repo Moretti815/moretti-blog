@@ -61,7 +61,7 @@
   //跳转至关于页面
   const toRewardList = () => {
    rewardShow.value = false;
-   router.go("/pages/about");
+   router.go("/pages/reward");
  };
 </script>
 

@@ -40,7 +40,7 @@
                   class="link-child-btn"
                   @click="router.go(child.link)"
                 >
-                  <i v-if="child.icon" :class="`iconfont icon-${child.icon}`" />
+                  <Icon v-if="child.icon" :name="child.icon" />
                   {{ child.text }}
                 </span>
               </div>

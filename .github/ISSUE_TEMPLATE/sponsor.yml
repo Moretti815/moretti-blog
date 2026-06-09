@@ -1,0 +1,37 @@
+name: 赞助记录
+description: 添加赞助记录到赞助名单
+title: "[赞助] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请填写以下赞助信息，审核通过后将被添加到赞助名单。
+  - type: input
+    id: name
+    attributes:
+      label: 赞助人名称
+      placeholder: "例如：Moretti"
+    validations:
+      required: true
+  - type: input
+    id: avatar
+    attributes:
+      label: 头像链接
+      placeholder: "https://example.com/avatar.webp（留空则使用首字头像）"
+    validations:
+      required: false
+  - type: input
+    id: date
+    attributes:
+      label: 赞助日期
+      placeholder: "2025-01-01"
+    validations:
+      required: true
+  - type: input
+    id: amount
+    attributes:
+      label: 赞助金额
+      placeholder: "例如：10￥、5 USDC"
+    validations:
+      required: true

@@ -62,6 +62,14 @@ export const themeConfig = {
           href: "https://cdn2.codesign.qq.com/icons/g5ZpEgx3z4VO6j2/latest/iconfont.css",
         },
       ],
+      // iconify
+      [
+        "script",
+        {
+          src: "https://code.iconify.design/3/3.1.0/iconify.min.js",
+          defer: true,
+        },
+      ],
       // Embed code
       ["link", { rel: "preconnect", href: "https://use.sevencdn.com" }],
       ["link", { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" }],
@@ -104,10 +112,10 @@ export const themeConfig = {
       ],
     },
     {
-      text: "专栏",
+      text: "页面",
       items: [
         { text: "我的装备", link: "/pages/equipment", icon: "tools" },
-        { text: "课程表", link: "/pages/timetable", icon: "calendar" },
+        { text: "课程表", link: "/pages/timetable", icon: "bxs:calendar" },
         // { text: "技术分享", link: "/pages/categories/技术分享", icon: "technical" },
         // { text: "我的项目", link: "/pages/project", icon: "code" },
         // { text: "效率工具", link: "/pages/tools", icon: "tools" },

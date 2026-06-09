@@ -258,7 +258,7 @@ export const aboutData = {
 
   // 赞赏
   award: {
-    enable: true,
+    enable: false,
     description: "如果我的文章对你有帮助，欢迎赞赏支持！您的支持是我持续创作的动力。",
     tips: "赞赏名单",
     tipsText: "共收到 {sum} 元赞赏，感谢大家的支持！",

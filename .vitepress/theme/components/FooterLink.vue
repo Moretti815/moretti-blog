@@ -14,7 +14,7 @@
         target="_blank"
         class="social-link"
       >
-        <i :class="`iconfont icon-${item.icon}`"></i>
+        <Icon :name="item.icon" />
       </a>
       <div class="logo" title="返回顶部" @click="smoothScrolling">
         <img :src="siteMeta.author.cover" alt="author" class="author" />
@@ -26,7 +26,7 @@
         target="_blank"
         class="social-link"
       >
-        <i :class="`iconfont icon-${item.icon}`"></i>
+        <Icon :name="item.icon" />
       </a>
     </div>
     <div class="footer-sitemap">

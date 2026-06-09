@@ -22,7 +22,7 @@
                     class="link-child-btn"
                     @click="pageJump(child.link)"
                   >
-                    <i v-if="child.icon" :class="`iconfont icon-${child.icon}`" />
+                    <Icon v-if="child.icon" :name="child.icon" />
                     <span class="name">{{ child.text }}</span>
                   </div>
                 </div>
