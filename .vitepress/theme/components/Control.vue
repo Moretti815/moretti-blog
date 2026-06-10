@@ -19,6 +19,13 @@
               <i class="iconfont icon-list"></i>
             </div>
             <div
+              class="menu-item"
+              title="清除缓存并强制刷新"
+              @click.stop="forceRefresh"
+            >
+              <Icon name="material-symbols:refresh" class-name="refresh-icon" />
+            </div>
+            <div
               :class="['menu-item', { open: store.playerShow }]"
               title="播放器开关"
               @click.stop="store.playerShow = !store.playerShow"
@@ -68,6 +75,19 @@ const rightMenuSwitch = () => { //
   } else {
     console.warn("$message is not defined. Right-click menu switch message not displayed.");
   }
+};
+
+// 强制刷新（清除缓存 + Service Worker）
+const forceRefresh = async () => {
+  if ('serviceWorker' in navigator) {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map((r) => r.unregister()));
+  }
+  if ('caches' in window) {
+    const names = await caches.keys();
+    await Promise.all(names.map((n) => caches.delete(n)));
+  }
+  window.location.reload(true);
 };
 </script>
 
@@ -144,6 +164,10 @@ const rightMenuSwitch = () => { //
           font-size: 24px; 
           color: var(--main-font-color); 
           transition: color 0.3s; 
+        }
+        .refresh-icon {
+          font-size: 24px;
+          color: var(--main-font-color);
         }
         &.open {
           background-color: var(--main-color); 

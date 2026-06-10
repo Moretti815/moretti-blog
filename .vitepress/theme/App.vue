@@ -40,6 +40,8 @@
   <RightMenu ref="rightMenuRef" />
   <!-- 全局消息 -->
   <Message />
+  <!-- 公告通知 -->
+  <Notification />
 </template>
 
 <script setup>

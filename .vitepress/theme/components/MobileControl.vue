@@ -3,32 +3,32 @@
     <!-- 操作按钮组（设置按钮上方，从右向左滑入） -->
     <div class="action-buttons">
       <!-- 4. 背景模糊 -->
-      <button
+      <!-- <button
         class="action-btn button-4"
         :class="{ show: isOpen, active: store.backgroundBlur }"
         title="背景模糊"
         @click.stop="store.changeShowStatus('backgroundBlur')"
       >
         <i class="iconfont icon-blur" />
-      </button>
+      </button> -->
       <!-- 3. 播放器 -->
-      <button
+      <!-- <button
         class="action-btn button-3"
         :class="{ show: isOpen, active: store.playerShow }"
         title="播放器"
         @click.stop="store.playerShow = !store.playerShow"
       >
         <i class="iconfont icon-music" />
-      </button>
+      </button> -->
       <!-- 2. 右键菜单 -->
-      <button
+      <!-- <button
         class="action-btn button-2"
         :class="{ show: isOpen, active: store.useRightMenu }"
         title="右键菜单"
         @click.stop="toggleRightMenu"
       >
         <i class="iconfont icon-list" />
-      </button>
+      </button> -->
       <!-- 1. 明暗模式（最靠近设置按钮） -->
       <button
         class="action-btn button-1"
@@ -37,6 +37,15 @@
         @click.stop="store.changeThemeType()"
       >
         <i :class="`iconfont icon-${store.themeType}`" />
+      </button>
+      <!-- 5. 强制刷新（最顶部） -->
+      <button
+        class="action-btn button-5"
+        :class="{ show: isOpen }"
+        title="清除缓存并强制刷新"
+        @click.stop="forceRefresh"
+      >
+        <Icon name="material-symbols:refresh" class-name="refresh-icon" />
       </button>
     </div>
 
@@ -114,6 +123,20 @@ const handleClickOutside = (e) => {
   if (wrapper && !wrapper.contains(e.target)) {
     isOpen.value = false;
   }
+};
+
+// 强制刷新（清除缓存 + Service Worker）
+const forceRefresh = async () => {
+  if ('serviceWorker' in navigator) {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map((r) => r.unregister()));
+  }
+  if ('caches' in window) {
+    const names = await caches.keys();
+    await Promise.all(names.map((n) => caches.delete(n)));
+  }
+  isOpen.value = false;
+  window.location.reload(true);
 };
 
 // 路由变化时关闭
@@ -216,6 +239,10 @@ onBeforeUnmount(() => {
     color: var(--main-font-color);
     transition: color 0.3s;
   }
+  .refresh-icon {
+    font-size: 20px;
+    color: var(--main-font-color);
+  }
   &:active {
     transform: translateX(0) scale(0.9) !important;
   }
@@ -230,8 +257,11 @@ onBeforeUnmount(() => {
   &.button-2 {
     transition-delay: 0.12s;
   }
-  &.button-1 {
+  &.button-5 {
     transition-delay: 0.18s;
+  }
+  &.button-1 {
+    transition-delay: 0.24s;
   }
 
   /* --- 显示态 --- */
@@ -246,11 +276,14 @@ onBeforeUnmount(() => {
     &.button-2 {
       transition-delay: 0.06s;
     }
-    &.button-3 {
+    &.button-5 {
       transition-delay: 0.12s;
     }
-    &.button-4 {
+    &.button-3 {
       transition-delay: 0.18s;
+    }
+    &.button-4 {
+      transition-delay: 0.24s;
     }
   }
 
