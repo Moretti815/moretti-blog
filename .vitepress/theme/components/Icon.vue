@@ -40,4 +40,13 @@ onMounted(() => {
   object-fit: contain;
   vertical-align: middle;
 }
+.iconify {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.3em;
+  vertical-align: middle;
+}
+:deep(svg) {
+  display: block;
+}
 </style>
