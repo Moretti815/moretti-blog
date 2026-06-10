@@ -2,9 +2,22 @@
 
 <template>
   <div v-if="rewardData.enable" class="reward">
-    <div class="reward-btn" @click="rewardShow = true">
-      <i class="iconfont icon-reward" />
-      <span class="text">赞赏博主</span>
+    <div class="reward-actions">
+      <!-- 赞赏博主 -->
+      <div class="reward-btn" @click="rewardShow = true">
+        <i class="iconfont icon-reward" />
+        <span class="text">赞赏博主</span>
+      </div>
+      <!-- 关注博主 -->
+      <a
+        class="follow-btn"
+        href="https://follow.it/moretti-s-blog?leanpub"
+        target="_blank"
+        rel="noopener"
+      >
+        <Icon name="mingcute:follow-line" class-name="follow-icon" />
+        <span class="text">关注博主</span>
+      </a>
     </div>
     <!-- 设置面板 -->
     <Modal
@@ -70,28 +83,67 @@
   position: relative;
   display: flex;
   justify-content: center;
-  width: max-content;
+  width: 100%;
   margin: 1rem auto;
   user-select: none;
+}
+.reward-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.reward-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 120px;
+  border-radius: 8px;
+  color: #fff;
+  background-color: var(--main-color-red);
+  transition: box-shadow 0.5s;
   cursor: pointer;
-  .reward-btn {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    width: 120px;
-    border-radius: 8px;
+  .iconfont {
     color: #fff;
-    background-color: var(--main-color-red);
-    transition: box-shadow 0.5s;
-    .iconfont {
-      color: #fff;
-      font-weight: normal;
-      margin-right: 6px;
+    font-weight: normal;
+    margin-right: 6px;
+  }
+  &:hover {
+    box-shadow: 0 0 40px 6px #ff384270;
+  }
+}
+.follow-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 120px;
+  border-radius: 8px;
+  color: var(--main-font-color);
+  background-color: var(--main-card-second-background);
+  border: 1.5px solid var(--main-card-border);
+  text-decoration: none;
+  transition: all 0.3s;
+  .follow-icon {
+    font-size: 18px;
+    margin-right: 4px;
+    color: var(--main-font-color);
+  }
+  .text {
+    color: var(--main-font-color);
+    font-size: 14px;
+  }
+  &:hover {
+    border-color: var(--main-color);
+    .text {
+      color: var(--main-color);
     }
-    &:hover {
-      box-shadow: 0 0 40px 6px #ff384270;
+    .follow-icon {
+      color: var(--main-color);
     }
   }
 }

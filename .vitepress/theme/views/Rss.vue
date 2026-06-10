@@ -37,10 +37,39 @@
       </ul>
     </div>
 
-    <!-- RSS 订阅 -->
+    <!-- follow.it 邮件订阅 -->
     <div class="subscribe-card">
       <div class="card-header">
         <span class="card-number">2</span>
+        <div class="card-header-text">
+          <h2 class="card-title">邮件订阅（follow.it）</h2>
+          <p class="card-desc">通过 follow.it 邮件服务订阅，无需 GitHub 账号</p>
+        </div>
+      </div>
+      <form
+        class="subscribe-form"
+        action="https://api.follow.it/subscription-form/OVRJUlUyaHZ0M1pSa2crNU1aQXFuYWJldVNla3VoZWRldCtKaEtqaytmK0VrcWtUSm9KMXJ4MzRCang0MEdPMkFYS1A2dExQWnhtNTVDSk9SNTRvOERsdDNqSGJNVDk3cTVZWHpTV3JCU3ZsVW1Bdk9BQ05HYUxIWExzZjB6QVh8SUZBQWpoaGxaUzJjalczUnBsKzdEaUhpR1B4WjFOaEZCbDViYkJUWVZMdz0=/8"
+        method="post"
+        target="_blank"
+      >
+        <input
+          type="email"
+          name="email"
+          required
+          placeholder="请输入您的邮箱地址"
+          class="email-input"
+        />
+        <button type="submit" class="submit-btn">订阅</button>
+      </form>
+      <div class="card-footer">
+        <span>由 follow.it 提供邮件订阅服务</span>
+      </div>
+    </div>
+
+    <!-- RSS 订阅 -->
+    <div class="subscribe-card">
+      <div class="card-header">
+        <span class="card-number">3</span>
         <div class="card-header-text">
           <h2 class="card-title">RSS 订阅</h2>
           <p class="card-desc">您可通过 RSS 订阅来获取本站的更新，此方法您需自备 RSS 阅读器</p>
