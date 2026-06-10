@@ -25,10 +25,12 @@
 import { storeToRefs } from "pinia";
 import { mainStore } from "@/store";
 import { generateId } from "@/utils/commonTools";
+import { usePostData } from "@/utils/usePostData.mjs";
 
 const router = useRouter();
 const store = mainStore();
-const { theme, page } = useData();
+const { page } = useData();
+const { postData, loadPostData } = usePostData();
 const { footerIsShow, infoPosition } = storeToRefs(store);
 
 // 文章信息
@@ -39,21 +41,20 @@ const nextPostData = ref(null);
 
 // 获取文章
 const getNextPostData = () => {
-  const { postData } = theme.value;
   const { filePath } = page.value;
-  if (!postData || !filePath) return false;
+  if (!postData.value.length || !filePath) return false;
   // 本篇索引
   const postId = generateId(filePath);
-  const postIndex = postData.findIndex((post) => post.id === postId);
+  const postIndex = postData.value.findIndex((post) => post.id === postId);
   // 是否有下一篇
-  if (postIndex >= 0 && postIndex < postData.length - 1) {
-    nextPostData.value = postData[postIndex + 1];
+  if (postIndex >= 0 && postIndex < postData.value.length - 1) {
+    nextPostData.value = postData.value[postIndex + 1];
     isNextPost.value = true;
     return true;
   }
   // 是否有上一篇
   else if (postIndex > 0) {
-    nextPostData.value = postData[postIndex - 1];
+    nextPostData.value = postData.value[postIndex - 1];
     isNextPost.value = false;
     return true;
   }
@@ -85,8 +86,10 @@ watch(
 );
 
 onMounted(() => {
-  getNextPostData();
-  isShowNext();
+  loadPostData().then(() => {
+    getNextPostData();
+    isShowNext();
+  });
 });
 
 onBeforeUnmount(() => {
@@ -114,6 +117,7 @@ onBeforeUnmount(() => {
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
   }
   &.fixed {

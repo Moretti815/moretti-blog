@@ -102,34 +102,57 @@
         <NextPost />
         <!-- 相关文章 -->
         <RelatedPost />
-        <!-- 评论 -->
+                <!-- 评论 -->
         <Comments ref="commentRef" />
       </article>
-      <Aside showToc />
       <!-- 手机端浮动目录按钮 -->
       <MobileToc />
+      <Aside v-if="isDesktopAsideVisible" showToc />
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { formatTimestamp } from "@/utils/helper";
 import { generateId } from "@/utils/commonTools";
 import initFancybox from "@/utils/initFancybox";
+import { ensureCodeFontLoaded } from "@/utils/fontLoader.mjs";
+import { useDesktopAside } from "@/utils/useDesktopAside.mjs";
+import { usePostData } from "@/utils/usePostData.mjs";
 import PasswordProtect from "@/components/PasswordProtect.vue";
 import MobileToc from "@/components/MobileToc.vue";
 
 const { page, theme, frontmatter } = useData();
+const { isDesktopAsideVisible } = useDesktopAside();
+const { postData, loadPostData } = usePostData();
 
 // 评论元素
 const commentRef = ref(null);
 
 // 文章 ID
+
 const postId = computed(() => generateId(page.value.relativePath));
 
 // 获取对应文章数据
 const postMetaData = computed(() => {
-  return theme.value.postData.find((item) => item.id === postId.value);
+  const loadedPost = postData.value.find((item) => item.id === postId.value);
+  if (loadedPost) return loadedPost;
+
+  const date = frontmatter.value.date ? new Date(frontmatter.value.date).getTime() : page.value.lastUpdated;
+  return {
+    id: postId.value,
+    title: frontmatter.value.title || page.value.title,
+    date,
+    lastModified: page.value.lastUpdated,
+    expired: date ? Math.floor((Date.now() - date) / (1000 * 60 * 60 * 24)) : 0,
+    tags: frontmatter.value.tags || [],
+    categories: frontmatter.value.categories || [],
+    description: frontmatter.value.description,
+    regularPath: page.value.relativePath ? `/${page.value.relativePath.replace(".md", ".html")}` : "",
+    top: frontmatter.value.top,
+    cover: frontmatter.value.cover,
+  };
 });
 
 // 密码保护相关
@@ -148,8 +171,17 @@ const handleUnlocked = () => {
   isUnlocked.value = true;
 };
 
+const loadCodeFontIfNeeded = async () => {
+  await nextTick();
+  if (document.querySelector('.markdown-main-style div[class*="language-"]')) {
+    ensureCodeFontLoaded();
+  }
+};
+
 onMounted(() => {
+  loadPostData();
   initFancybox(theme.value);
+  loadCodeFontIfNeeded();
   // 检查是否已解锁
   if (hasPassword.value && checkUnlocked()) {
     isUnlocked.value = true;
@@ -159,6 +191,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @use "../style/post.scss";
+
 
 .password-protect-wrapper {
   width: 100%;

@@ -7,7 +7,7 @@
     </div>
     <div class="all-tags">
       <a
-        v-for="(item, tag, index) in theme.tagsData"
+        v-for="(item, tag, index) in tagsData"
         :key="index"
         :href="`/pages/tags/${tag}`"
         class="tags"
@@ -21,7 +21,13 @@
 </template>
 
 <script setup>
-const { theme } = useData();
+import { usePostData } from "@/utils/usePostData.mjs";
+
+const { tagsData, loadPostData } = usePostData();
+
+onMounted(() => {
+  loadPostData();
+});
 </script>
 
 <style lang="scss" scoped>

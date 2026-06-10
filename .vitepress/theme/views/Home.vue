@@ -23,20 +23,27 @@
                 : ''
           "
         />
-      </div>
+            </div>
       <!-- 侧边栏 -->
-      <Aside />
+      <Aside v-if="isDesktopAsideVisible" />
     </div>
+
   </div>
 </template>
 
 <script setup>
 import { mainStore } from "@/store";
 import { themeConfig } from "@/assets/themeConfig.mjs";
+import { usePostData } from "@/utils/usePostData.mjs";
 import MomentTicker from "@/components/MomentTicker.vue";
+import { useDesktopAside } from "@/utils/useDesktopAside.mjs";
 
 const { theme } = useData();
+const { isDesktopAsideVisible } = useDesktopAside();
+const { postData: allPosts, tagsData, categoriesData, loadPostData } = usePostData();
+
 const store = mainStore();
+
 const props = defineProps({
   // 显示首页头部
   showHeader: {
@@ -66,10 +73,10 @@ const postSize = theme.value.postSize;
 // 列表总数量
 const allListTotal = computed(() => {
   const data = props.showCategories
-    ? theme.value.categoriesData[props.showCategories]?.articles
+    ? categoriesData.value[props.showCategories]?.articles
     : props.showTags
-      ? theme.value.tagsData[props.showTags]?.articles
-      : theme.value.postData;
+      ? tagsData.value[props.showTags]?.articles
+      : allPosts.value;
   // 返回数量
   return data ? data.length : 0;
 });
@@ -94,18 +101,22 @@ const postData = computed(() => {
   let data = null;
   // 分类数据
   if (props.showCategories) {
-    data = theme.value.categoriesData[props.showCategories]?.articles;
+    data = categoriesData.value[props.showCategories]?.articles;
   }
   // 标签数据
   else if (props.showTags) {
-    data = theme.value.tagsData[props.showTags]?.articles;
+    data = tagsData.value[props.showTags]?.articles;
   }
   // 文章数据
   else {
-    data = theme.value.postData;
+    data = allPosts.value;
   }
   // 返回列表
   return data ? data.slice(page * postSize, page * postSize + postSize) : [];
+});
+
+onMounted(() => {
+  loadPostData();
 });
 
 // 恢复滚动位置

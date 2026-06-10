@@ -21,23 +21,16 @@ const player = ref(null);
 const playerDom = ref(null);
 
 // 获取播放列表
-    
-    // 先显示播放器
-    if (store) { // 最好检查一下 store 是否存在
-      store.playerShow = true;
-    };
-
 const getMusicListData = async () => {
-  try {
+  if (!enable) return false;
 
+  try {
     const musicList = await getMusicList(url, id, server, type);
     console.log(musicList);
     initAPlayer(musicList?.length ? musicList : []);
   } catch (error) {
-        // 新增：获取播放内容失败自动隐藏播放器
-    if (store) { // 最好检查一下 store 是否存在
-      store.playerShow = false;
-      }
+    // 获取播放内容失败自动隐藏播放器
+    store.playerShow = false;
     // $message.error("获取播放列表失败，请重试");
     initAPlayer([]);
   }
@@ -77,13 +70,10 @@ const initAPlayer = async (list) => {
     window.$player = player.value;
   } catch (error) {
     console.error("初始化播放器出错：", error);
-        
-    // 新增：捕获到错误后，关闭播放器显示
-    if (store) { // 最好检查一下 store 是否存在
-      store.playerShow = false;
-      }
-    }
-  };
+    // 捕获到错误后，关闭播放器显示
+    store.playerShow = false;
+  }
+};
 
 // 获取当前播放歌曲信息
 const getMusicData = () => {
@@ -146,13 +136,8 @@ watch(
 );
 
 onMounted(() => {
-  // 更改时间：2025.06.11
-  // 更改内容：移除屏幕宽度大于768条件，让播放器一直开启
-  // 发现改了也没什么用，所以改回去了
-  // 改成播放器默认关闭
-  if (window.innerWidth >= 768 && playerShow.value && enable) getMusicListData();
-  // 更改后的代码如下
-  // if (playerShow.value && enable) getMusicListData();
+  // 播放器默认关闭，仅在用户手动开启时再请求歌单并动态加载 APlayer，避免影响首屏。
+  if (playerShow.value) getMusicListData();
 });
 
 onBeforeUnmount(() => {
@@ -162,11 +147,13 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .player {
+  position: relative;
   height: 42px;
-  margin-top: 12px;
+  margin-bottom: 12px;
   transition: transform 0.3s;
   cursor: pointer;
   .player-content {
+    position: relative;
     margin: 0;
     width: fit-content;
     border-radius: 50px;

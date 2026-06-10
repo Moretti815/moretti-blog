@@ -75,7 +75,7 @@
           </div>
           <!-- 搜索 -->
           <div
-            v-if="theme.search.enable"
+            v-if="theme.search?.enable"
             class="menu-btn nav-btn"
             title="全站搜索"
             @click="store.changeShowStatus('searchShow')"
@@ -139,6 +139,16 @@ import { smoothScrolling, shufflePost } from "@/utils/helper";
 
 const router = useRouter();
 const store = mainStore();
+const app = getCurrentInstance()?.appContext.app;
+const SearchModal = defineAsyncComponent(async () => {
+  const [{ default: InstantSearch }, searchComponent] = await Promise.all([
+    import("vue-instantsearch/vue3/es"),
+    import("@/components/Search.vue"),
+  ]);
+
+  app?.use(InstantSearch);
+  return searchComponent.default;
+});
 const { scrollData } = storeToRefs(store);
 const { site, theme, frontmatter, page } = useData();
 </script>

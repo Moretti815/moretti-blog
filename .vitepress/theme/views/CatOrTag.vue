@@ -4,15 +4,15 @@
     <div class="title">
       <h1 class="title-name">{{ type === "categories" ? "全部分类" : "全部标签" }}</h1>
       <span v-if="type === 'categories'" class="title-num">
-        共有 {{ Object.keys(theme.categoriesData)?.length || 0 }} 个分类
+        共有 {{ Object.keys(categoriesData)?.length || 0 }} 个分类
       </span>
       <span v-else class="title-num">
-        共有 {{ Object.keys(theme.tagsData)?.length || 0 }} 个标签
+        共有 {{ Object.keys(tagsData)?.length || 0 }} 个标签
       </span>
     </div>
     <div v-if="type === 'categories'" class="type-lists">
       <a
-        v-for="(item, key, index) in theme.categoriesData"
+        v-for="(item, key, index) in categoriesData"
         :key="index"
         :href="`/pages/categories/${key}`"
         class="type-item s-card"
@@ -24,7 +24,7 @@
     </div>
     <div v-else class="type-lists">
       <a
-        v-for="(item, key, index) in theme.tagsData"
+        v-for="(item, key, index) in tagsData"
         :key="index"
         :href="`/pages/tags/${key}`"
         class="type-item s-card"
@@ -38,13 +38,18 @@
 </template>
 
 <script setup>
-const { theme } = useData();
+import { usePostData } from "@/utils/usePostData.mjs";
+
+const { tagsData, categoriesData, loadPostData } = usePostData();
 const props = defineProps({
   // 页面类型
   type: {
     type: String,
     default: "categories",
   },
+});
+onMounted(() => {
+  loadPostData();
 });
 </script>
 

@@ -53,7 +53,7 @@ export const themeConfig = {
           href: "#",
         },
       ],
-      // iconfont
+            // iconfont
       [
         "link",
         {
@@ -71,25 +71,25 @@ export const themeConfig = {
         },
       ],
       // Embed code
-      ["link", { rel: "preconnect", href: "https://use.sevencdn.com" }],
-      ["link", { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" }],
-      [
-        "link",
-        {
-          crossorigin: "anonymous",
-          href: "https://use.sevencdn.com/css2?family=Fira+Code:wght@300..700&display=swap",
-          rel: "stylesheet",
-        },
-      ],
-      // 预载 DocSearch
-      [
-        "link",
-        {
-          href: "https://0F1DUC8MAX-dsn.algolia.net",
-          rel: "preconnect",
-          crossorigin: "",
-        },
-      ],
+    //   ["link", { rel: "preconnect", href: "https://use.sevencdn.com" }],
+    //   ["link", { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" }],
+    //   [
+    //     "link",
+    //     {
+    //       crossorigin: "anonymous",
+    //       href: "https://use.sevencdn.com/css2?family=Fira+Code:wght@300..700&display=swap",
+    //       rel: "stylesheet",
+    //     },
+    //   ],
+    //   // 预载 DocSearch
+    //   [
+    //     "link",
+    //     {
+    //       href: "https://0F1DUC8MAX-dsn.algolia.net",
+    //       rel: "preconnect",
+    //       crossorigin: "",
+    //     },
+    //   ],
       // Umami 统计
       [
         "script",
@@ -99,8 +99,10 @@ export const themeConfig = {
           "data-website-id": "f8fb9e7a-9d44-49c1-96f7-98ac672eb88f",
         },
       ],
+      // Code font and Algolia connections are loaded lazily only when needed.
     ],
   },
+
   // 导航栏菜单
   nav: [
     {
@@ -383,7 +385,7 @@ export const themeConfig = {
   // 音乐播放器
   // https://github.com/imsyy/Meting-API
   music: {
-    enable: true,
+    enable: false,
     // url
     url: "https://meting.20100907.xyz/api",
     // id

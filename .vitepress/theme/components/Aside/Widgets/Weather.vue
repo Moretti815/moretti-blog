@@ -50,11 +50,13 @@ const weatherData = ref(null)
 const loading     = ref(true)
 const error       = ref(false)
 
-// 移动端检测：若是移动端，则不请求，直接不渲染
-const isMobile = /Mobi|Android|iPhone|iPad|Pad|iPod/i.test(navigator.userAgent)
+const isMobileClient = () => {
+  if (typeof navigator === 'undefined') return false
+  return /Mobi|Android|iPhone|iPad|Pad|iPod/i.test(navigator.userAgent)
+}
 
 onMounted(async () => {
-  if (isMobile) {
+  if (isMobileClient()) {
     loading.value = false
     return
   }

@@ -1,21 +1,18 @@
 import { defineConfig } from "vitepress";
 import { createRssFile } from "./theme/utils/generateRSS.mjs";
 import { withPwa } from "@vite-pwa/vitepress";
-import {
-  getAllPosts,
-  getAllType,
-  getAllCategories,
-  getAllArchives,
-} from "./theme/utils/getPostData.mjs";
+import { getAllPosts } from "./theme/utils/getPostData.mjs";
 import { jumpRedirect } from "./theme/utils/commonTools.mjs";
 import { getThemeConfig } from "./init.mjs";
 import markdownConfig from "./theme/utils/markdownConfig.mjs";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import path from "path";
+import fs from "fs-extra";
 
 // 获取全局数据
 const postData = await getAllPosts();
+await fs.outputJson("public/data/postData.json", postData);
 
 // 获取主题配置
 const themeConfig = await getThemeConfig();
@@ -56,11 +53,7 @@ export default withPwa(
     // 主题配置
     themeConfig: {
       ...themeConfig,
-      // 必要数据
-      postData: postData,
-      tagsData: getAllType(postData),
-      categoriesData: getAllCategories(postData),
-      archivesData: getAllArchives(postData),
+      postCount: postData.length,
     },
     // markdown
     markdown: {
