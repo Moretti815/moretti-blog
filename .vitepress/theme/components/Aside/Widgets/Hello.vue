@@ -14,10 +14,10 @@
         <span class="desc">{{ theme.siteMeta.description }}</span>
       </div>
       <div class="link">
-        <a href="https://github.com/kazukokawagawa/" target="_blank" class="social-link">
+        <a href="https://s.2005815.xyz/github" target="_blank" class="social-link">
           <i class="iconfont icon-github"></i>
         </a>
-        <a href="mailto:kazukokawagawa@qq.com" target="_blank" class="social-link">
+        <a href="https://s.2005815.xyz/mail" target="_blank" class="social-link">
           <i class="iconfont icon-email"></i>
         </a>
       </div>

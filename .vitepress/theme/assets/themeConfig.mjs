@@ -193,15 +193,16 @@ export const themeConfig = {
     // 是否开启封面显示
     showCover: {
       // 是否开启封面显示 文章不设置cover封面会显示异常，可以设置下方默认封面
-      enable: false,
+      enable: true,
       // 封面布局方式: left | right | both
       coverLayout: "both",
-      // 默认封面(随机展示)
-      defaultCover: [
-        "https://example.com/1.avif",
-        "https://example.com/2.avif",
-        "https://example.com/3.avif",
-      ],
+      // 默认封面
+      // 支持两种格式：
+      //   1. 单个 URL 字符串：自动拼接 ?seed= 参数，每篇文章显示不同随机封面
+      //      如 "https://img.2005815.xyz/h" → "https://img.2005815.xyz/h?seed=12345"
+      //   2. 数组：按文章索引取模轮流展示
+      //      如 ["url1", "url2", "url3"]
+      defaultCover: "https://img.2005815.xyz/h",
     },
   },
   // 页脚信息

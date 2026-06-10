@@ -89,17 +89,39 @@ const gridStyle = computed(() =>
 // 判断是否显示封面
 const showCover = () => themeConfig.value?.cover?.showCover?.enable
 
+// 根据字符串生成确定性哈希值（SSR 与客户端结果一致）
+const hashSeed = (str) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
+};
+
 // 获取封面图片 按优先级获取：cover > defaultCover > false
-// 使用 index 代替 Math.random() 确保 SSR 和客户端结果一致
-const getCover = ({ cover: itemCover }, index = 0) => {
+// 支持随机图 API：单 URL 时自动拼接 ?seed= 参数，保证每篇文章封面不同
+const getCover = (item, index = 0) => {
   const { cover } = themeConfig.value ?? {}
 
   if (!cover?.showCover?.enable) return false
-  if (itemCover) return itemCover
+  if (item.cover) return item.cover
 
-  return Array.isArray(cover.showCover.defaultCover)
-    ? cover.showCover.defaultCover[index % cover.showCover.defaultCover.length]
-    : false
+  const { defaultCover } = cover.showCover
+  if (!defaultCover) return false
+
+  // 单个 URL：拼接 seed 参数，每篇文章获得不同封面
+  if (typeof defaultCover === 'string') {
+    const seed = hashSeed(item.regularPath || item.title || String(index))
+    const separator = defaultCover.includes('?') ? '&' : '?'
+    return `${defaultCover}${separator}seed=${seed}`
+  }
+
+  // 数组：按 index 取模，兼容原逻辑
+  if (Array.isArray(defaultCover)) {
+    return defaultCover[index % defaultCover.length]
+  }
+
+  return false
 }
 
 // 前往文章
