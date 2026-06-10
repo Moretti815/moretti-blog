@@ -15,11 +15,7 @@
         target="_blank"
         rel="noopener"
       >
-        <img
-          class="follow-icon"
-          src="https://chatimg.pp373.com/Upload/2026-06-10/2757facb8005439a904833e12af4f470.png"
-          alt="follow"
-        />
+        <Icon name="mingcute:follow-line" class-name="follow-icon" />
         <span class="text">关注博主</span>
       </a>
     </div>
@@ -133,10 +129,9 @@
   text-decoration: none;
   transition: all 0.3s;
   .follow-icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 6px;
-    object-fit: contain;
+    font-size: 18px;
+    margin-right: 4px;
+    color: var(--main-font-color);
   }
   .text {
     color: var(--main-font-color);
@@ -145,6 +140,9 @@
   &:hover {
     border-color: var(--main-color);
     .text {
+      color: var(--main-color);
+    }
+    .follow-icon {
       color: var(--main-color);
     }
   }
