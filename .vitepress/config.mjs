@@ -45,6 +45,13 @@ export default withPwa(
           }
         </style>`,
       ],
+      [
+        "meta",
+        {
+          name: "follow.it-verification-code",
+          content: "vAtbwRUBJrxL8zrNkzTj",
+        },
+      ],
     ],
     // sitemap
     sitemap: {
