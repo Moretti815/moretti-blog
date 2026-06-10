@@ -14,27 +14,27 @@
         <span class="card-number">1</span>
         <div class="card-header-text">
           <h2 class="card-title">邮件订阅</h2>
-          <p class="card-desc">通过邮箱接收本站最新文章更新通知</p>
+          <p class="card-desc">通过 GitHub Issues 订阅，下次本站更新文章将收到邮件推送</p>
         </div>
       </div>
-      <form
-        class="subscribe-form"
-        action="https://api.follow.it/subscription-form/OVRJUlUyaHZ0M1pSa2crNU1aQXFuYWJldVNla3VoZWRldCtKaEtqaytmK0VrcWtUSm9KMXJ4MzRCang0MEdPMkFYS1A2dExQWnhtNTVDSk9SNTRvOERsdDNqSGJNVDk3cTVZWHpTV3JCU3ZsVW1Bdk9BQ05HYUxIWExzZjB6QVh8SUZBQWpoaGxaUzJjalczUnBsKzdEaUhpR1B4WjFOaEZCbDViYkJUWVZMdz0=/8"
-        method="post"
-        target="_blank"
-      >
+      <div class="subscribe-form">
         <input
+          v-model="emailInput"
           type="email"
-          name="email"
           required
           placeholder="请输入您的邮箱地址"
           class="email-input"
+          @keydown.enter="subscribeEmail"
         />
-        <button type="submit" class="submit-btn">订阅</button>
-      </form>
-      <div class="card-footer">
-        <span>由 follow.it 提供邮件订阅服务</span>
+        <button class="submit-btn" :disabled="!isValidEmail" @click="subscribeEmail">
+          订阅
+        </button>
       </div>
+      <ul class="subscribe-tips">
+        <li>标题格式：<code>[邮箱订阅]your@email.com</code></li>
+        <li>提交后请在 GitHub 上确认 Issue 标题无误后点击 Submit</li>
+        <li>如需退订，可在 Issue 详情页删除该 Issue</li>
+      </ul>
     </div>
 
     <!-- RSS 订阅 -->
@@ -72,6 +72,21 @@
 </template>
 
 <script setup>
+const emailInput = ref('');
+const isValidEmail = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value));
+
+const subscribeEmail = () => {
+  if (!isValidEmail.value) {
+    if (typeof $message !== 'undefined') {
+      $message.error('请输入有效的邮箱地址');
+    }
+    return;
+  }
+  const title = `[邮箱订阅]${emailInput.value}`;
+  const url = `https://github.com/Moretti815/Friend-Circle-Lite/issues/new?template=%E9%82%AE%E7%AE%B1%E8%AE%A2%E9%98%85.md&title=${encodeURIComponent(title)}`;
+  window.open(url, '_blank');
+};
+
 const rssUrl = 'https://b.2005815.xyz/rss.xml';
 const isCopied = ref(false);
 
@@ -207,16 +222,35 @@ const copyRssUrl = async () => {
     &:active {
       transform: scale(0.97);
     }
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
   }
 }
 
 .card-footer {
-  margin-top: 0.8rem;
+  margin-top: 0.6rem;
   text-align: center;
   span {
     font-size: 0.75rem;
     color: var(--main-font-second-color);
     opacity: 0.7;
+  }
+}
+.subscribe-tips {
+  margin: 0.8rem 0 0;
+  padding-left: 1.2rem;
+  li {
+    font-size: 0.75rem;
+    color: var(--main-font-second-color);
+    line-height: 1.8;
+  }
+  code {
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    background: var(--main-card-second-background);
+    font-size: 0.72rem;
   }
 }
 
