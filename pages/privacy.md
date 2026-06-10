@@ -3,13 +3,11 @@ title: 隐私政策
 aside: false
 card: true
 ---
-
 # 隐私政策
 
-**更新日期：2025 年 04 月 29 日**  
-**生效日期：2025 年 04 月 29 日**
+**生效日期：2026 年 06 月 10 日**
 
-欢迎来到 [池鱼小栈](https://chiyu.it/)（ 以下简称 “本站” ）。本站非常重视您的隐私和个人信息保护。您在使用网站时，可能会收集和使用您的相关信息。通过本页面向您说明在您访问本站时，本站是如何收集、使用、保存、共享和转让这些信息。
+欢迎来到 [Moretti&#39;s Blog](https://b.2005815.xyz)（ 以下简称 “本站” ）。本站非常重视您的隐私和个人信息保护。您在使用网站时，可能会收集和使用您的相关信息。通过本页面向您说明在您访问本站时，本站是如何收集、使用、保存、共享和转让这些信息。
 
 ## 信息收集与使用
 
@@ -23,13 +21,6 @@ card: true
 
 > 在访问时，本站内置的第三方服务会通过以下或更多途径，来获取您的以下或更多信息：
 
-- **百度统计工具** 会收集您的访问信息、访问操作过程，用于网站维护。[百度统计隐私政策](https://tongji.baidu.com/web/help/article?id=330&type=0)
-- **51la 统计工具** 会收集您的访问信息，用于网站维护。[51la 隐私政策](https://www.51.la/about/privacy)
-- **灵雀应用监控平台** 会收集您的访问操作过程和资源加载情况，用于网站维护。[51la 隐私政策](https://www.51.la/about/privacy)
-- **SUSTech Open Source Mirrors** 会收集您的访问信息，用于网站加速。[SUSTech Open Source Mirrors 简介](https://mirrors.sustech.edu.cn/about/)
-- **腾讯云** 会收集您的访问信息，用于提供网站服务。[腾讯云隐私政策](https://www.tencentcloud.com/zh/document/product/301/17345)
-- **多吉云** 会收集您的访问信息，用于提供网站服务。[多吉云隐私权政策](https://www.dogecloud.com/page/privacy-policy)
-- **又拍云** 会收集您的访问信息，用于提供网站服务。[又拍云用户隐私政策](https://help.upyun.com/knowledge-base/%E7%94%A8%E6%88%B7%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96/)
 - **腾讯Codesign** 会收集您的访问信息，用于提供图标显示。[CoDesign 设计协作平台隐私保护指引](https://codesign.qq.com/privacy.html)
 - **网易云音乐** 会收集您的访问信息，用于胶囊音乐的展示与播放。[网易云音乐隐私政策](https://st.music.163.com/official-terms/privacy)
 
@@ -67,8 +58,7 @@ card: true
 
 **第三方服务**
 
-- 百度统计
-- 51la 统计
+- Umami统计
 
 详情参考 [在 Chrome 中删除、允许和管理 Cookie](https://support.google.com/chrome/answer/95647?co=GENIE.Platform=Desktop&hl=zh-Hans)
 

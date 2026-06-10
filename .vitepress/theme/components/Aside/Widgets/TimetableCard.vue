@@ -408,7 +408,11 @@ onUnmounted(() => {
         <div class="next-week-course">
           <span class="label">明天首节：</span>
           <span class="course-name" :style="{ color: parseCourseColor(tomorrowFirstCourse.color) }">
-            {{ tomorrowFirstCourse.courseName }} - {{ tomorrowFirstCourse.room }}
+            {{ tomorrowFirstCourse.courseName }}
+          </span>
+          <span class="course-meta">
+            <span class="course-time">{{ tomorrowFirstCourse.timeText }}</span>
+            <span class="course-room">{{ tomorrowFirstCourse.room }}</span>
           </span>
         </div>
         <div class="countdown">
@@ -422,7 +426,11 @@ onUnmounted(() => {
         <div class="next-week-course">
           <span class="label">下周首节：</span>
           <span class="course-name" :style="{ color: parseCourseColor(nextWeekFirstCourse.color) }">
-            {{ nextWeekFirstCourse.courseName }} - {{ nextWeekFirstCourse.room }}
+            {{ nextWeekFirstCourse.courseName }}
+          </span>
+          <span class="course-meta">
+            <span class="course-time">{{ nextWeekFirstCourse.timeText }}</span>
+            <span class="course-room">{{ nextWeekFirstCourse.room }}</span>
           </span>
         </div>
         <div class="countdown">
@@ -586,6 +594,20 @@ onUnmounted(() => {
 
         .course-name {
           font-weight: 600;
+          display: block;
+          margin-bottom: 4px;
+        }
+
+        .course-meta {
+          display: flex;
+          gap: 10px;
+          font-size: 0.8rem;
+          color: var(--main-font-second-color);
+
+          .course-time {
+            color: var(--main-color);
+            font-weight: 500;
+          }
         }
       }
     }

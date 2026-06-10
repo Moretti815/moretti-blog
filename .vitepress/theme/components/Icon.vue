@@ -43,7 +43,6 @@ onMounted(() => {
 .iconify {
   display: inline-flex;
   align-items: center;
-  margin-right: 0.3em;
   vertical-align: middle;
 }
 :deep(svg) {

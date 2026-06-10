@@ -3,7 +3,6 @@ title: 友情链接
 aside: false
 comment: true
 ---
-
 <script setup>
 import Link from "@/views/Link.vue";
 </script>
@@ -12,7 +11,7 @@ import Link from "@/views/Link.vue";
 
 # 友情链接申请
 
-很高兴能和各位优秀的朋友们交流，本站友链目前采用**手动添加**，如果你想加入友链，可以在下方留言，我会在不忙的时候统一添加。
+很高兴能和各位优秀的朋友们交流，本站友链目前采用**半自动添加，如果你想加入友链，可以在下方留言，我会在不忙的时候统一添加。**
 
 ### 友链相关须知
 

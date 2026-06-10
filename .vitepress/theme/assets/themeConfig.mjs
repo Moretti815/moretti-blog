@@ -114,19 +114,13 @@ export const themeConfig = {
       ],
     },
     {
-      text: "页面",
+      text: "页面导航",
       items: [
-        { text: "我的装备", link: "/pages/equipment", icon: "tools" },
-        { text: "课程表", link: "/pages/timetable", icon: "bxs:calendar" },
+        { text: "导航", link: "/pages/guide", icon: "iconoir:navigator" },
         // { text: "技术分享", link: "/pages/categories/技术分享", icon: "technical" },
         // { text: "我的项目", link: "/pages/project", icon: "code" },
         // { text: "效率工具", link: "/pages/tools", icon: "tools" },
       ],
-    },
-    {
-      text: "相册",
-      link: "/pages/albums",
-      icon: "image",
     },
     {
       text: "友链",
@@ -139,7 +133,7 @@ export const themeConfig = {
       text: "我的",
       items: [
         { text: "畅所欲言", link: "/pages/message", icon: "chat" },
-        //{ text: "致谢名单", link: "/pages/thanks", icon: "reward" },
+        { text: "致谢名单", link: "/pages/reward", icon: "reward" },
         { text: "关于本站", link: "/pages/about", icon: "contacts" },
       ],
     },
@@ -151,8 +145,8 @@ export const themeConfig = {
       list: [
         {
           icon: "https://cdn2.codesign.qq.com/icons/g5ZpEgx3z4VO6j2/latest/iconfont.css",
-          name: "主站",
-          url: "/",
+          name: "主页",
+          url: "https://home.2005815.xyz",
         },
         // {
         //   icon: "/images/logo/other/hot.png",

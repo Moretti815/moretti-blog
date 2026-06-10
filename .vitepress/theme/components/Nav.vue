@@ -427,12 +427,20 @@ const { site, theme, frontmatter, page } = useData();
                 font-size: 20px;
                 transition: color 0.3s;
               }
+              :deep(.iconify) {
+                margin-right: 8px;
+                font-size: 20px;
+                transition: color 0.3s;
+              }
               &:hover {
                 color: var(--main-card-background);
                 background-color: var(--main-color);
                 box-shadow: 0 8px 12px -3px var(--main-color-bg);
                 padding: 0.6rem 1rem;
                 .iconfont {
+                  color: var(--main-card-background);
+                }
+                :deep(.iconify) {
                   color: var(--main-card-background);
                 }
               }
