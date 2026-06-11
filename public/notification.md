@@ -4,4 +4,5 @@
 
 - 新增 **图片水印** 和 **图片格式转换** 工具页面
 - 赞助页面已上线，感谢大家的支持 🎉
-- 如有问题欢迎通过 [GitHub Issues](https://github.com) 反馈
+- 如有问题欢迎通过 [GitHub Issues](https://github.com/Moretti815/moretti-blog/issues/new) 反馈
+- 如果遇到网站的样式问题，电脑端可以在右上角的控制台点击中间的强制刷斌按钮；手机端点击右侧的设置按钮里面的刷新按钮，一般是源于缓存问题，

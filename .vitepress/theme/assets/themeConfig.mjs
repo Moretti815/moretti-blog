@@ -319,7 +319,7 @@ export const themeConfig = {
     // 站点简介
     hello: {
       enable: true,
-      text: "这里有关于<strong>开发</strong>相关的问题和看法，也会有一些<strong>奇技淫巧</strong>的分享，其中大部分内容会侧重于<strong>前端开发</strong>。希望你可以在这里找到对你有用的知识和教程。",
+      text: "欢迎来到Moretti的博客！我在这个博客中记录着我的<b>生活日常</b>、<b>踩坑过程</b>和<b>资源分享</b>。<br>希望你可以在这里获得开心~",
     },
     // 目录
     toc: {

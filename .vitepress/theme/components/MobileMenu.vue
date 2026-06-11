@@ -159,6 +159,10 @@ const pageJump = (url) => {
             margin-right: 6px;
             opacity: 0.6;
           }
+          :deep(.iconify) {
+            margin-right: 6px;
+            opacity: 0.6;
+          }
           .name {
             max-width: 80px;
             white-space: nowrap;
