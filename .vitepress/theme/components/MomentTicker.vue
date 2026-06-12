@@ -53,6 +53,9 @@ const fetchData = async () => {
       case 'tgtalk':
         await fetchTGTalk();
         break;
+      case 'mastodon':
+        await fetchMastodon();
+        break;
       default:
         await fetchMemos();
     }
@@ -159,6 +162,37 @@ const fetchTGTalk = async () => {
       hasVideo: false,
       hasMusic: false,
       hasLink: /https?:\/\/[^\s]+/.test(content),
+      date: item.time,
+    };
+  });
+};
+
+// Mastodon 数据
+const fetchMastodon = async () => {
+  const apiUrl = themeConfig.moment?.mastodon?.apiUrl || 'https://mastodon-api.20050815.xyz/';
+  const response = await fetch(apiUrl);
+  const data = await response.json();
+
+  if (!data.success || !data.data) return;
+
+  const baseUrl = apiUrl.replace(/\/$/, '');
+
+  items.value = data.data.slice(0, maxItems).map(item => {
+    const content = item.text || '';
+    const tag = extractTag(content);
+    const cleanContent = content.replace(/#\S+\s*/g, '').trim();
+    const hasImage = (item.image || []).length > 0;
+    const hasLink = /https?:\/\/[^\s]+/.test(content);
+
+    return {
+      id: `mastodon-${item.id}`,
+      content: content,
+      snippet: cleanContent.slice(0, 60),
+      tag: tag,
+      hasImage: hasImage,
+      hasVideo: false,
+      hasMusic: false,
+      hasLink: hasLink,
       date: item.time,
     };
   });

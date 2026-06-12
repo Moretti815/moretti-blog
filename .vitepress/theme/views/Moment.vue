@@ -81,12 +81,25 @@ import initFancybox from '@/utils/initFancybox.mjs';
 const store = mainStore();
 const { themeValue } = storeToRefs(store);
 
-// Tab 配置
-const tabs = [
+// 所有可用的 Tab 配置
+const allTabs = [
   { key: 'memos', label: 'Memos', icon: 'memo' },
   { key: 'jike', label: '即刻', icon: 'rss' },
   { key: 'tgtalk', label: 'TGTalk', icon: 'chat' },
+  { key: 'mastodon', label: 'Mastodon', icon: 'link' },
 ];
+
+// 从配置中读取启用的 Tab
+const enabledTabs = themeConfig.moment?.tabs || [];
+const tabs = computed(() => {
+  // 如果没有配置 tabs，返回所有 Tab（兼容旧配置）
+  if (enabledTabs.length === 0) return allTabs;
+  // 根据配置过滤 Tab
+  return allTabs.filter(tab => {
+    const config = enabledTabs.find(t => t.key === tab.key);
+    return config?.enable !== false;
+  });
+});
 
 // 从配置读取默认 Tab
 const defaultTab = themeConfig.moment?.defaultTab || 'memos';
@@ -168,6 +181,9 @@ const fetchData = async () => {
       case 'tgtalk':
         await fetchTGTalk();
         break;
+      case 'mastodon':
+        await fetchMastodon();
+        break;
     }
     // 数据加载完成后，等待 DOM 更新，然后初始化 fancybox
     await nextTick();
@@ -248,6 +264,56 @@ const fetchJike = async () => {
   });
 
   hasMore.value = false;
+};
+
+// Mastodon 数据
+const fetchMastodon = async () => {
+  const apiUrl = themeConfig.moment?.mastodon?.apiUrl || 'https://mastodon-api.20050815.xyz/';
+  const response = await fetch(apiUrl);
+  const data = await response.json();
+
+  if (!data.success || !data.data) throw new Error('获取 Mastodon 数据失败');
+
+  // 获取 API 基础 URL（用于拼接图片代理路径）
+  const baseUrl = apiUrl.replace(/\/$/, '');
+
+  rawData.value = data.data.map(item => {
+    // 处理内容：纯文本
+    const content = item.text || '';
+
+    // 提取标签（#tag 格式）
+    const tags = [];
+    const tagMatches = content.match(/#(\S+)/g);
+    if (tagMatches) {
+      tagMatches.forEach(match => {
+        tags.push(match.slice(1));
+      });
+    }
+
+    // 处理图片路径：如果是相对路径，拼接 API 基础 URL
+    const images = (item.image || []).map(img => {
+      if (img.startsWith('/')) {
+        return baseUrl + img;
+      }
+      return img;
+    });
+
+    // 时间戳转换为北京时间
+    // item.time 是毫秒时间戳，直接使用 Date 对象会自动转换为本地时间
+    const beijingTime = item.time;
+
+    return {
+      id: `mastodon-${item.id}`,
+      content: content,
+      snippet: content.slice(0, 100),
+      tags: tags,
+      date: beijingTime,
+      images: images,
+      link: null,
+    };
+  });
+
+  hasMore.value = !!data.nextBefore;
 };
 
 // TGTalk 数据

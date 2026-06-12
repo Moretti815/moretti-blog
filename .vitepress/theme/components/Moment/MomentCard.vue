@@ -95,7 +95,7 @@
       </div>
       <div class="footer-right">
         <button
-          v-if="type !== 'jike'"
+          v-if="type !== 'jike' && type !== 'mastodon'"
           class="reply-btn"
           @click="handleReply"
           title="回复"
@@ -143,19 +143,19 @@ const emit = defineEmits(['tag-click', 'reply']);
 const processedContent = computed(() => {
   let content = props.data.content || '';
 
-  // 处理 Memos 的标签格式 #tag
-  if (props.type === 'memos') {
-    content = content.replace(/#(\S+)/g, (match, tag) => {
-      return `<span class="content-tag" data-tag="${tag}">#${tag}</span>`;
-    });
-  }
-
   // 处理 TGTalk 的标签链接
   if (props.type === 'tgtalk') {
     content = content.replace(
       /<a href="\?q=%23[^"]*">#([^<]*)<\/a>/g,
       '<span class="content-tag" data-tag="$1">#$1</span>'
     );
+  }
+
+  // 处理 Mastodon 和 Memos 的标签格式 #tag
+  if (props.type === 'mastodon' || props.type === 'memos') {
+    content = content.replace(/#(\S+)/g, (match, tag) => {
+      return `<span class="content-tag" data-tag="${tag}">#${tag}</span>`;
+    });
   }
 
   // 自动识别链接

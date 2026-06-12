@@ -449,15 +449,27 @@ export const themeConfig = {
   },
   // 说说页面配置
   moment: {
-    // 默认展示的数据源: memos / jike / tgtalk
-    defaultTab: "jike",
+    // 默认展示的数据源: memos / jike / tgtalk / mastodon
+    defaultTab: "mastodon",
+    // 数据源 Tab 配置（控制显示/隐藏）
+    tabs: [
+      { key: "memos", enable: true },
+      { key: "jike", enable: true },
+      { key: "tgtalk", enable: true },
+      { key: "mastodon", enable: true },
+    ],
+    // Mastodon 配置
+    mastodon: {
+      // API 地址
+      apiUrl: "https://mastodon-api.20050815.xyz/",
+    },
   },
   // 说说滚动条配置
   momentTicker: {
     // 是否启用
     enable: true,
-    // 数据源: memos / jike / tgtalk
-    source: "jike",
+    // 数据源: memos / jike / tgtalk / mastodon
+    source: "mastodon",
     // 显示数量
     limit: 5,
   },
