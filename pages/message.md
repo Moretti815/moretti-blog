@@ -8,5 +8,5 @@ type: envelope
 <MessagePage />
 
 <script setup>
-import MessagePage from "../.vitepress/theme/views/Message.vue";
+import MessagePage from "../.vitepress/theme/views/MessageBoard.vue";
 </script>

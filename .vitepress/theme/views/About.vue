@@ -3,6 +3,9 @@
     <!-- 作者信息 -->
     <AuthorInfo :data="aboutData.authorInfo" :title="aboutData.title" />
 
+    <!-- 文章更新热力图 -->
+    <ContributionHeatmap />
+
     <!-- Hello Section -->
     <HelloSection />
 
@@ -40,6 +43,7 @@
 
 <script setup>
 import { onMounted } from 'vue';
+import ContributionHeatmap from '../components/About/ContributionHeatmap.vue';
 import AuthorInfo from '../components/About/AuthorInfo.vue';
 import HelloSection from '../components/About/HelloSection.vue';
 import ContentInfo from '../components/About/ContentInfo.vue';

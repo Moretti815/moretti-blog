@@ -125,12 +125,7 @@ export default withPwa(
       },
       // 构建
       build: {
-        minify: "terser",
-        terserOptions: {
-          compress: {
-            pure_funcs: ["console.log"],
-          },
-        },
+        minify: false,
       },
     },
     // PWA

@@ -80,6 +80,12 @@ export const guideGroups = [
         href: '/pages/watermark',
         icon: 'material-symbols:brand-awareness',
       },
+      {
+        title: '便携小空调',
+        desc: '为你的夏日带去清凉!',
+        href: '/pages/air-conditioner',
+        icon: 'material-symbols:ac-unit',
+      },
     ],
   },
   {
