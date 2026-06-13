@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body">
+  <Teleport v-if="isClient" to="body">
     <!-- 移动端菜单 -->
     <Transition name="fade" mode="out-in">
       <div v-show="store.mobileMenuShow" class="mobile-menu">
@@ -53,10 +53,12 @@
 
 <script setup>
 import { mainStore } from "@/store";
+import { useClientOnly } from "@/composables/useClientOnly";
 
 const store = mainStore();
 const router = useRouter();
 const { theme } = useData();
+const { isClient } = useClientOnly();
 
 // 菜单数据
 const { nav, tagsData } = theme.value;

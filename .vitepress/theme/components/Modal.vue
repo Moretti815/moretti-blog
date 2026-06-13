@@ -1,6 +1,6 @@
 <!-- 弹窗组件 -->
 <template>
-  <Teleport to="body">
+  <Teleport v-if="isClient" to="body">
     <Transition name="fade" mode="out-in">
       <div v-if="show" class="modal">
         <div class="modal-mask" @click.stop="maskClick" />
@@ -31,6 +31,9 @@
 </template>
 
 <script setup>
+import { useClientOnly } from "@/composables/useClientOnly";
+const { isClient } = useClientOnly();
+
 const props = defineProps({
   // 是否显示
   show: {

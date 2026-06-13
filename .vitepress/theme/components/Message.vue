@@ -1,6 +1,6 @@
 <!-- 全局消息 -->
 <template>
-  <Teleport to="body">
+  <Teleport v-if="isClient" to="body">
     <Transition name="fadeDown" mode="out-in">
       <div
         v-if="messageShow"
@@ -20,6 +20,9 @@
 </template>
 
 <script setup>
+import { useClientOnly } from "@/composables/useClientOnly";
+const { isClient } = useClientOnly();
+
 // 消息数据
 const messageType = ref("info");
 const messageShow = ref(false);

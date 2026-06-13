@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body">
+  <Teleport v-if="isClient" to="body">
     <Transition name="fade" mode="out-in" @before-enter="changeCloseStyle">
       <div v-if="store.controlShow" class="control" @click="store.changeShowStatus('controlShow')">
         <div ref="closeControlRef" class="close-control">
@@ -18,13 +18,13 @@
             >
               <i class="iconfont icon-list"></i>
             </div>
-            <div
+            <!-- <div
               class="menu-item"
               title="清除缓存并强制刷新"
               @click.stop="forceRefresh"
             >
               <Icon name="material-symbols:refresh" class-name="refresh-icon" />
-            </div>
+            </div> -->
             <div
               :class="['menu-item', { open: store.playerShow }]"
               title="播放器开关"
@@ -48,8 +48,10 @@
 
 <script setup>
 import { mainStore } from '@/store'; // **修正 Pinia store 的导入路径 **
+import { useClientOnly } from "@/composables/useClientOnly";
 
 const store = mainStore(); // 
+const { isClient } = useClientOnly();
 
 const closeControlRef = ref(null); // 
 

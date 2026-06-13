@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body">
+  <Teleport v-if="isClient" to="body">
     <!-- 站点背景 -->
     <div v-if="backgroundType !== 'close'" :class="['background', backgroundType, themeValue]">
       <img
@@ -18,9 +18,11 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { mainStore } from "@/store";
+import { useClientOnly } from "@/composables/useClientOnly";
 
 const store = mainStore();
 const { backgroundType, backgroundUrl, themeValue } = storeToRefs(store);
+const { isClient } = useClientOnly();
 
 // 加载失败
 const coverError = (e) => {

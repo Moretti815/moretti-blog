@@ -64,7 +64,7 @@
     </div>
 
     <!-- Tooltip -->
-    <Teleport to="body">
+    <Teleport v-if="isClient" to="body">
       <div
         v-if="tooltip.visible"
         class="heatmap-tooltip"
@@ -78,6 +78,8 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue';
+import { useClientOnly } from "@/composables/useClientOnly";
+const { isClient } = useClientOnly();
 
 const loaded = ref(false);
 const cells = ref([]);

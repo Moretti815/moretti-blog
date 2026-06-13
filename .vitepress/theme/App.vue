@@ -24,8 +24,8 @@
   <!-- 页脚 -->
   <FooterLink v-show="!loadingStatus" :showBar="isPostPage && !page.isNotFound" />
   <Footer v-show="!loadingStatus" />
-  <!-- 悬浮菜单 -->
-  <Teleport to="body">
+  <!-- 悬浮菜单（仅客户端渲染） -->
+  <Teleport v-if="isClient" to="body">
     <!-- 左侧菜单 -->
     <div :class="['left-menu', { hidden: footerIsShow }]">
             <!-- 全局播放器 -->
@@ -50,6 +50,7 @@ import { mainStore, initializeCursor } from "@/store";
 import { calculateScroll, specialDayGray } from "@/utils/helper";
 import { ensureGlobalFontsLoaded } from "@/utils/fontLoader.mjs";
 import MobileControl from "@/components/MobileControl.vue";
+import { useClientOnly } from "@/composables/useClientOnly";
 
 // const screenWidth = ref(0);
 const route = useRoute();
@@ -57,6 +58,7 @@ const store = mainStore();
 const { frontmatter, page, theme } = useData();
 const { loadingStatus, footerIsShow, themeValue, themeType, backgroundType, fontFamily, fontSize } =
   storeToRefs(store);
+const { isClient } = useClientOnly();
 let fontSwitchTaskId = 0;
 
 //2025.06.12更新：在 Next.js 的服务端渲染过程中，应用会在服务器端先进行渲染

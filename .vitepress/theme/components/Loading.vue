@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body">
+  <Teleport v-if="isClient" to="body">
     <Transition name="fade" mode="out-in">
       <div v-if="loadingStatus" class="loading" @click="loadingStatus = false">
         <img src="https://jsd.268682.xyz/gh/Kemeow0815/img@main/img/preloader.gif" class="logo" alt="loading" />
@@ -12,10 +12,12 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { mainStore } from '@/store';
+import { useClientOnly } from "@/composables/useClientOnly";
 
 const store = mainStore();
 const { theme } = useData();
 const { loadingStatus } = storeToRefs(store);
+const { isClient } = useClientOnly();
 
 // 显示提示
 const showTip = ref(false);

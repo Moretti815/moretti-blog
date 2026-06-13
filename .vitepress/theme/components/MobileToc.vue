@@ -23,7 +23,7 @@
     </button>
 
     <!-- 目录面板遮罩 -->
-    <Teleport to="body">
+    <Teleport v-if="isClient" to="body">
       <Transition name="mobile-toc-fade">
         <div v-if="isOpen" class="mobile-toc-overlay" @click.self="closeToc">
           <!-- 目录面板 -->
@@ -73,6 +73,7 @@
 
 <script setup>
 import { throttle } from "lodash-es";
+import { useClientOnly } from "@/composables/useClientOnly";
 
 const route = useRoute();
 
@@ -81,6 +82,7 @@ const tocData = ref(null);
 const activeHeader = ref(null);
 const activeTocHeight = ref(0);
 const postDom = ref(null);
+const { isClient } = useClientOnly();
 
 // ---------- 与 Toc.vue 相同的核心逻辑 ----------
 

@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body">
+  <Teleport v-if="isClient" to="body">
     <!-- 右键菜单 -->
     <Transition name="fade" mode="out-in">
       <div
@@ -223,6 +223,8 @@
 </template>
 
 <script setup>
+import { useClientOnly } from "@/composables/useClientOnly";
+const { isClient } = useClientOnly();
 import { storeToRefs } from "pinia";
 import { mainStore } from "@/store";
 import { smoothScrolling, shufflePost, copyText, copyImage, downloadImage } from "@/utils/helper";

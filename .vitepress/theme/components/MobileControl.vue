@@ -39,14 +39,14 @@
         <i :class="`iconfont icon-${store.themeType}`" />
       </button>
       <!-- 5. 强制刷新（最顶部） -->
-      <button
+      <!-- <button
         class="action-btn button-5"
         :class="{ show: isOpen }"
         title="清除缓存并强制刷新"
         @click.stop="forceRefresh"
       >
         <Icon name="material-symbols:refresh" class-name="refresh-icon" />
-      </button>
+      </button> -->
     </div>
 
     <!-- 设置按钮 -->
