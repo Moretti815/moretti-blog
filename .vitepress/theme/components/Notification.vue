@@ -104,6 +104,7 @@ onMounted(async () => {
   position: absolute;
   top: 8px;
   right: 8px;
+  z-index: 2;
   width: 24px;
   height: 24px;
   display: flex;
@@ -111,10 +112,11 @@ onMounted(async () => {
   justify-content: center;
   border: none;
   border-radius: 6px;
-  background: transparent;
+  background: var(--main-card-background);
   color: var(--main-font-second-color);
   cursor: pointer;
   transition: all 0.2s;
+  box-shadow: 0 1px 3px var(--main-border-shadow);
   svg { display: block; }
   &:hover {
     background: var(--main-card-second-background);
