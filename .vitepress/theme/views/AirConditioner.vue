@@ -1,7 +1,7 @@
 <template>
   <div class="ac-page" ref="pageRef">
-    <!-- 星空背景 Canvas -->
-    <canvas ref="canvasRef" class="ac-canvas"></canvas>
+    <!-- 星空背景 Canvas (仅客户端渲染，避免 SSR hydration 不匹配) -->
+    <canvas v-if="isClient" ref="canvasRef" class="ac-canvas"></canvas>
 
     <!-- 顶部温度通知 -->
     <Transition name="ac-banner">
@@ -139,10 +139,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 
 const pageRef = ref(null);
 const canvasRef = ref(null);
+const isClient = ref(false);
 
 const temperature = ref(26);
 const mode = ref('cool'); // 'cool' | 'fan'
@@ -273,7 +274,11 @@ function initCanvas() {
 let cleanup;
 
 onMounted(() => {
-  cleanup = initCanvas();
+  // 标记客户端渲染，使 canvas 在 hydration 完成后才渲染
+  isClient.value = true;
+  nextTick(() => {
+    cleanup = initCanvas();
+  });
 });
 
 onBeforeUnmount(() => {
