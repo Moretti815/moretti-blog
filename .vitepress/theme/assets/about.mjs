@@ -126,31 +126,31 @@ export const aboutData = {
   // 游戏
   games: [
     {
-      title: "原神",
-      subtitle: "Genshin Impact",
-      img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=300&fit=crop",
+      title: "MC",
+      subtitle: "我的世界",
+      img: "https://www.gxjubao.org.cn/data/file/2026/0612/vip_830942eb81b143428403c3e400f257ed.jpg",
       box_shadow: "0 8px 32px rgba(99, 102, 241, 0.3)",
       icon_group: ["🎮", "⚔️", "🗡️"],
-      tips_left: "冒险等级 60",
-      tips_right: "UID: 100000001",
+      tips_left: "沙盒玩家",
+      tips_right: "ID: Krylin",
     },
     {
-      title: "塞尔达传说",
-      subtitle: "The Legend of Zelda",
-      img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=300&fit=crop",
+      title: "Don't Starve Together",
+      subtitle: "饥荒 联机版",
+      img: "https://file.zhuyitai.com/feedback/202606/12/96b639d921a041493a73d85b99e76300.jpg",
       box_shadow: "0 8px 32px rgba(34, 197, 94, 0.3)",
       icon_group: ["🗡️", "🛡️", "🏹"],
-      tips_left: "已通关",
-      tips_right: "100% 探索",
+      tips_left: "几百小时+的新手 ",
+      tips_right: "生存小白~",
     },
     {
-      title: "我的世界",
-      subtitle: "Minecraft",
-      img: "https://images.unsplash.com/photo-1587573089734-09cb69c0f2b4?w=400&h=300&fit=crop",
+      title: "Terraria",
+      subtitle: "泰拉瑞亚",
+      img: "https://file.icve.com.cn/file_doc/wk2YF6Cz/TPTpLMLx.jpg",
       box_shadow: "0 8px 32px rgba(168, 85, 247, 0.3)",
       icon_group: ["⛏️", "🧱", "💎"],
-      tips_left: "生存模式",
-      tips_right: "1000+ 小时",
+      tips_left: "冒险大师",
+      tips_right: "1000小时+",
     },
   ],
 
@@ -243,8 +243,8 @@ export const aboutData = {
 
   // 建站原因
   cause: {
-    tip: "为什么建站",
-    title: "建站初衷",
+    tip: "建站",
+    title: "建站历史",
   },
 
   // 十年计划

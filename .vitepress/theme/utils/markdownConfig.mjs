@@ -66,9 +66,272 @@ const markdownConfig = (md, themeConfig) => {
       }
     },
   });
+  // pic - 图片展示标签，语法：::pic ... ::
+  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  function parsePicYaml(raw) {
+    const lines = raw.split('\n').filter(l => {
+      const t = l.trim();
+      return t && !t.startsWith('#');
+    });
+    const attrs = { zoom: true, mirror: '' };
+    for (const line of lines) {
+      const colonIdx = line.indexOf(':');
+      if (colonIdx === -1) continue;
+      const key = line.slice(0, colonIdx).trim();
+      const val = line.slice(colonIdx + 1).trim();
+      if (!key) continue;
+      if (key === 'zoom') attrs.zoom = val !== 'false';
+      else if (key === 'mirror') attrs.mirror = val;
+      else attrs[key] = val;
+    }
+    return attrs;
+  }
+  function renderPic(attrs) {
+    let src = attrs.src || '';
+    if (!src) return '';
+    // mirror：通过第三方图片加载服务
+    if (attrs.mirror) {
+      src = attrs.mirror.replace(/\{url\}/g, encodeURIComponent(src)) || src;
+    }
+    const style = [];
+    if (attrs.width) style.push(`max-width:${attrs.width}`);
+    if (attrs.height) style.push(`max-height:${attrs.height}`);
+    const styleAttr = style.length ? ` style="${style.join(';')}"` : '';
+    const caption = attrs.caption ? `<span class="pic-caption">${esc(attrs.caption)}</span>` : '';
+    const imgHtml = `<img class="pic-img" src="${esc(src)}" alt="${esc(attrs.caption || '')}" loading="lazy"${styleAttr} />`;
+    if (attrs.zoom !== false && themeConfig?.fancybox?.enable !== false) {
+      return `<div class="pic-wrapper"><a class="img-fancybox" href="${esc(src)}" data-fancybox="gallery" data-caption="${esc(attrs.caption || '')}">${imgHtml}</a>${caption}</div>`;
+    }
+    return `<div class="pic-wrapper">${imgHtml}${caption}</div>`;
+  }
+
+  md.block.ruler.before('fence', 'pic_block', (state, startLine, endLine, silent) => {
+    const pos = state.bMarks[startLine] + state.tShift[startLine];
+    const max = state.eMarks[startLine];
+    const line = state.src.slice(pos, max);
+    const match = line.match(/^(:{2,})pic\s*$/);
+    if (!match) return false;
+    if (silent) return true;
+
+    const marker = match[1];
+    const markerLen = marker.length;
+
+    // 查找闭合标记
+    let closeLine = -1;
+    for (let i = startLine + 1; i < endLine; i++) {
+      const p = state.bMarks[i] + state.tShift[i];
+      const m = state.eMarks[i];
+      const l = state.src.slice(p, m);
+      if (new RegExp(`^:{${markerLen},}\\s*$`).test(l)) {
+        closeLine = i;
+        break;
+      }
+    }
+    if (closeLine === -1) return false;
+
+    // 提取原始文本（跳过去 --- 和末尾 ---）
+    const rawLines = state.src.split('\n').slice(startLine + 1, closeLine);
+    // 找到 --- 分隔符，提取中间的 YAML
+    let yamlStart = -1, yamlEnd = -1;
+    for (let i = 0; i < rawLines.length; i++) {
+      if (rawLines[i].trim() === '---') {
+        if (yamlStart === -1) yamlStart = i;
+        else { yamlEnd = i; break; }
+      }
+    }
+    let yamlRaw = '';
+    if (yamlStart !== -1 && yamlEnd !== -1) {
+      yamlRaw = rawLines.slice(yamlStart + 1, yamlEnd).join('\n');
+    } else {
+      // 没有 --- 分隔符，直接用全部内容
+      yamlRaw = rawLines.join('\n');
+    }
+
+    const attrs = parsePicYaml(yamlRaw);
+    const html = renderPic(attrs);
+    const token = state.push('html_block', '', 0);
+    token.content = html + '\n';
+    token.map = [startLine, closeLine + 1];
+    state.line = closeLine + 1;
+    return true;
+  });
+  // poetry - 诗词展示标签，语法：::poetry ... ::
+  function parsePoetryYaml(raw) {
+    const lines = raw.split('\n').filter(l => {
+      const t = l.trim();
+      return t && !t.startsWith('#');
+    });
+    const attrs = {};
+    for (const line of lines) {
+      const colonIdx = line.indexOf(':');
+      if (colonIdx === -1) continue;
+      const key = line.slice(0, colonIdx).trim();
+      const val = line.slice(colonIdx + 1).trim();
+      if (key) attrs[key] = val;
+    }
+    return attrs;
+  }
+  function renderPoetry(meta, bodyLines) {
+    let html = '<div class="poetry-wrapper">';
+    if (meta.title) html += `<div class="poetry-title">${esc(meta.title)}</div>`;
+    if (meta.author) html += `<div class="poetry-author">${esc(meta.author)}</div>`;
+    html += '<div class="poetry-body">';
+    for (const line of bodyLines) {
+      if (line.trim()) {
+        html += `<p>${md.renderInline(line)}</p>`;
+      } else {
+        html += '<p class="poetry-empty">&nbsp;</p>';
+      }
+    }
+    html += '</div>';
+    if (meta.footer) html += `<div class="poetry-footer">${esc(meta.footer)}</div>`;
+    html += '</div>';
+    return html;
+  }
+
+  md.block.ruler.before('fence', 'poetry_block', (state, startLine, endLine, silent) => {
+    const pos = state.bMarks[startLine] + state.tShift[startLine];
+    const max = state.eMarks[startLine];
+    const line = state.src.slice(pos, max);
+    const match = line.match(/^(:{2,})poetry\s*$/);
+    if (!match) return false;
+    if (silent) return true;
+
+    const marker = match[1];
+    const markerLen = marker.length;
+
+    // 查找闭合标记
+    let closeLine = -1;
+    for (let i = startLine + 1; i < endLine; i++) {
+      const p = state.bMarks[i] + state.tShift[i];
+      const m = state.eMarks[i];
+      const l = state.src.slice(p, m);
+      if (new RegExp(`^:{${markerLen},}\\s*$`).test(l)) {
+        closeLine = i;
+        break;
+      }
+    }
+    if (closeLine === -1) return false;
+
+    // 提取原始文本
+    const rawLines = state.src.split('\n').slice(startLine + 1, closeLine);
+    // 找到 --- 分隔符，提取 YAML 和正文
+    let yamlStart = -1, yamlEnd = -1;
+    for (let i = 0; i < rawLines.length; i++) {
+      if (rawLines[i].trim() === '---') {
+        if (yamlStart === -1) yamlStart = i;
+        else { yamlEnd = i; break; }
+      }
+    }
+    let meta = {};
+    let bodyLines = [];
+    if (yamlStart !== -1 && yamlEnd !== -1) {
+      meta = parsePoetryYaml(rawLines.slice(yamlStart + 1, yamlEnd).join('\n'));
+      bodyLines = rawLines.slice(yamlEnd + 1);
+    } else {
+      // 没有 --- 分隔符，全部作为正文
+      bodyLines = rawLines;
+    }
+    // 去除正文首尾空行
+    while (bodyLines.length && !bodyLines[0].trim()) bodyLines.shift();
+    while (bodyLines.length && !bodyLines[bodyLines.length - 1].trim()) bodyLines.pop();
+
+    const html = renderPoetry(meta, bodyLines);
+    const token = state.push('html_block', '', 0);
+    token.content = html + '\n';
+    token.map = [startLine, closeLine + 1];
+    state.line = closeLine + 1;
+    return true;
+  });
+  // quote - 引用展示标签，语法：::quote{icon="..."} ... :: 或 ::quote ... #icon ... #default ... ::
+  function parseQuoteContent(rawLines) {
+    let iconProp = null;   // icon prop 值
+    let iconSlot = null;    // #icon 段内容
+    let bodyLines = [];     // #default / 正文内容
+    let inIcon = false;
+    let inDefault = false;
+    let hasSlotSyntax = false;
+    for (const line of rawLines) {
+      const t = line.trim();
+      if (t === '#icon') { hasSlotSyntax = true; inIcon = true; inDefault = false; continue; }
+      if (t === '#default') { inIcon = false; inDefault = true; continue; }
+      if (inIcon) { iconSlot = (iconSlot || '') + t; }
+      else if (inDefault) { bodyLines.push(line); }
+      else { bodyLines.push(line); }
+    }
+    return { iconProp, iconSlot, bodyLines, hasSlotSyntax };
+  }
+  function renderQuoteBlock(icon, iconText, bodyLines) {
+    let html = '<div class="quote-block">';
+    html += '<div class="quote-icon-line">';
+    if (iconText) {
+      html += `<span class="quote-icon-text">${esc(iconText)}</span>`;
+    } else {
+      const iconName = icon || 'tabler:message-2';
+      html += `<span class="iconify" data-icon="${esc(iconName)}" aria-hidden="true"></span>`;
+    }
+    html += '</div>';
+    html += '<div class="quote-content">';
+    for (const line of bodyLines) {
+      if (line.trim()) {
+        html += `<p>${md.renderInline(line)}</p>`;
+      }
+    }
+    html += '</div></div>';
+    return html;
+  }
+
+  md.block.ruler.before('fence', 'quote_block', (state, startLine, endLine, silent) => {
+    const pos = state.bMarks[startLine] + state.tShift[startLine];
+    const max = state.eMarks[startLine];
+    const line = state.src.slice(pos, max);
+    // 匹配 ::quote 或 ::quote{icon="..."}
+    const match = line.match(/^(:{2,})quote(?:\{([^}]*)\})?\s*$/);
+    if (!match) return false;
+    if (silent) return true;
+
+    const marker = match[1];
+    const markerLen = marker.length;
+    const attrStr = match[2] || '';
+
+    // 解析 {icon="..."} 属性
+    let iconProp = null;
+    const iconMatch = attrStr.match(/icon="([^"]*)"/);
+    if (iconMatch) iconProp = iconMatch[1];
+
+    // 查找闭合标记
+    let closeLine = -1;
+    for (let i = startLine + 1; i < endLine; i++) {
+      const p = state.bMarks[i] + state.tShift[i];
+      const m = state.eMarks[i];
+      const l = state.src.slice(p, m);
+      if (new RegExp(`^:{${markerLen},}\\s*$`).test(l)) {
+        closeLine = i;
+        break;
+      }
+    }
+    if (closeLine === -1) return false;
+
+    // 提取原始文本（闭合标记之前的所有行）
+    const rawLines = state.src.split('\n').slice(startLine + 1, closeLine);
+    // 去除首尾空行
+    while (rawLines.length && !rawLines[0].trim()) rawLines.shift();
+    while (rawLines.length && !rawLines[rawLines.length - 1].trim()) rawLines.pop();
+
+    const { iconSlot, bodyLines } = parseQuoteContent(rawLines);
+    // 决定图标：icon slot > icon prop > 默认
+    const finalIcon = iconSlot ? null : (iconProp || 'tabler:message-2');
+    const finalIconText = iconSlot || null;
+    const html = renderQuoteBlock(finalIcon, finalIconText, bodyLines);
+
+    const token = state.push('html_block', '', 0);
+    token.content = html + '\n';
+    token.map = [startLine, closeLine + 1];
+    state.line = closeLine + 1;
+    return true;
+  });
   // chat - 自定义 block 规则，在 block 解析阶段处理，避免 markdown-it-attrs 干扰
   // 语法：::::chat ... :::: (4个及以上冒号)
-  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function processInline(text) {
     return esc(text)
       .replace(/`([^`]+)`/g, '<code>$1</code>')

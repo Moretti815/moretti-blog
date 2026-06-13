@@ -58,7 +58,7 @@ const linkData = [
         links: "https://cworld0.com/links",
       },
       {
-        name: "CWorld Site",
+        name: "虹墨空间站",
         url: "https://www.imaegoo.com/",
         avatar: "https://cdn.jsdelivr.net/npm/imaegoo/avatar.jpg",
         snapshot: "https://jsd.268682.xyz/gh/Kemeow0815/img@main/img/iMaeGoo.webp",

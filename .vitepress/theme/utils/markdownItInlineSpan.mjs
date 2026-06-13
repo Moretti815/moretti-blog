@@ -11,6 +11,7 @@
 const BRACKET_RE = /\[([^\]]+)\]\{\.([a-zA-Z0-9_-]+(?:\s+[a-zA-Z0-9_-]+)*)\}/;
 const BLUR_RE = /:blur\[([^\]]+)\]/;
 const KEY_RE = /:key\{([^}]+)\}/;
+const QUOTE_RE = /:quote\[([^\]]+)\]/;
 
 // 按键显示名称映射
 const KEY_DISPLAY = {
@@ -197,6 +198,52 @@ function inlineSpanPlugin(md) {
             const tag = new state.Token("html_inline", "", 0);
             tag.content = `<kbd class="key-tag"${dataCode}>${md.utils.escapeHtml(display)}</kbd>`;
             newChildren.push(tag);
+          }
+        }
+      }
+
+      blockTokens[i].children = newChildren;
+    }
+  });
+
+  // :quote[text] → <span class="quote-inline"><span class="iconify ..." data-icon="tabler:message-2"></span>text</span>
+  md.core.ruler.after("inline", "inline_quote_tag", (state) => {
+    const blockTokens = state.tokens;
+
+    for (let i = 0; i < blockTokens.length; i++) {
+      if (blockTokens[i].type !== "inline") continue;
+      const children = blockTokens[i].children;
+      if (!children) continue;
+
+      const newChildren = [];
+
+      for (const token of children) {
+        if (token.type !== "text" || !QUOTE_RE.test(token.content)) {
+          newChildren.push(token);
+          continue;
+        }
+
+        const parts = token.content.split(QUOTE_RE);
+        for (let j = 0; j < parts.length; j++) {
+          if (j % 2 === 0) {
+            if (parts[j]) {
+              const t = new state.Token("text", "", 0);
+              t.content = parts[j];
+              newChildren.push(t);
+            }
+          } else {
+            const textContent = parts[j];
+            const open = new state.Token("html_inline", "", 0);
+            open.content = '<span class="quote-inline"><span class="iconify quote-inline-icon" data-icon="tabler:message-2" aria-hidden="true"></span>';
+            newChildren.push(open);
+
+            const inlineTokens = [];
+            md.inline.parse(textContent, state.md, state.env, inlineTokens);
+            newChildren.push(...inlineTokens);
+
+            const close = new state.Token("html_inline", "", 0);
+            close.content = "</span>";
+            newChildren.push(close);
           }
         }
       }

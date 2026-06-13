@@ -235,7 +235,7 @@ export const themeConfig = {
       {
         text: "博客",
         items: [
-          { text: "近期文章", link: "/" },
+ 
           { text: "全部分类", link: "/pages/categories" },
           { text: "全部标签", link: "/pages/tags" },
           { text: "文章归档", link: "/pages/archives", newTab: true },
@@ -454,7 +454,7 @@ export const themeConfig = {
     // 数据源 Tab 配置（控制显示/隐藏）
     tabs: [
       { key: "memos", enable: true },
-      { key: "jike", enable: true },
+      { key: "jike", enable: false },
       { key: "tgtalk", enable: true },
       { key: "mastodon", enable: true },
     ],

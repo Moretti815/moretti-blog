@@ -11,17 +11,19 @@
         <div class="author-content-item-tips">{{ game.title }}</div>
         <span class="author-content-item-title">{{ game.subtitle }}</span>
         <div class="content-bottom">
-          <div v-if="game.icon_group" class="icon-group">
-            <span
-              v-for="(icon, i) in game.icon_group"
-              :key="i"
-              class="icon-item"
-              :class="{ 'is-emoji': isEmoji(icon) }"
-              :style="!isEmoji(icon) ? { backgroundImage: `url(${icon})` } : {}"
-            >{{ isEmoji(icon) ? icon : '' }}</span>
+          <div class="content-left">
+            <div v-if="game.icon_group" class="icon-group">
+              <span
+                v-for="(icon, i) in game.icon_group"
+                :key="i"
+                class="icon-item"
+                :class="{ 'is-emoji': isEmoji(icon) }"
+                :style="!isEmoji(icon) ? { backgroundImage: `url(${icon})` } : {}"
+              >{{ isEmoji(icon) ? icon : '' }}</span>
+            </div>
+            <div v-if="game.tips_left" class="tips">{{ game.tips_left }}</div>
           </div>
-          <div v-else-if="game.tips_left" class="tips">{{ game.tips_left }}</div>
-          <div v-if="game.tips_right" class="tips">{{ game.tips_right }}</div>
+          <div v-if="game.tips_right" class="tips tips-right">{{ game.tips_right }}</div>
         </div>
       </div>
     </div>
@@ -116,16 +118,27 @@ const isEmoji = (icon) => {
     opacity: 0.8;
     font-size: 0.6rem;
     margin-bottom: 0.5rem;
+    color: #fff;
   }
 
   .author-content-item-title {
     font-size: 28px;
     font-weight: 700;
     line-height: 1.1;
+    color: #fff;
   }
 
   .content-bottom {
     margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .content-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
 
     .icon-group {
       display: flex;
@@ -150,6 +163,10 @@ const isEmoji = (icon) => {
     .tips {
       font-size: 0.875rem;
       opacity: 0.8;
+    }
+
+    .tips-right {
+      text-align: right;
     }
   }
 }

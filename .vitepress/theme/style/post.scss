@@ -131,10 +131,10 @@
   // ProseA 智能链接
   .prose-a {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.2em;
-    margin: -0.1em -0.2em;
-    padding: 0.1em 0.2em;
+    margin: 0 -0.2em;
+    padding: 0 0.2em;
     background: linear-gradient(var(--main-color-bg), var(--main-color-bg)) no-repeat center bottom / 100% 0.1em;
     transition: all 0.2s ease;
     border-radius: 0;
@@ -210,6 +210,46 @@
     }
     &:hover {
       color: var(--main-font-color);
+    }
+  }
+  // pic 图片标签
+  .pic-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem 0;
+    .pic-img {
+      width: auto;
+      max-width: 100%;
+      max-height: 450px;
+      margin: 0 auto;
+      border-radius: 12px;
+      transition:
+        opacity 0.3s,
+        filter 0.3s;
+      cursor: zoom-in;
+      &:hover {
+        filter: blur(0) brightness(0.8);
+      }
+    }
+    .pic-caption {
+      display: inline-flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      margin: 0.8rem 0;
+      font-size: 14px;
+      opacity: 0.6;
+      color: var(--main-font-color);
+    }
+    .img-fancybox {
+      width: auto;
+      display: block;
+      margin: 0 auto;
+      &::before {
+        display: none;
+      }
     }
   }
   // 代码块
@@ -881,6 +921,51 @@
     }
   }
 
+  // 诗词展示标签
+  .poetry-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    margin: 1.5rem 0;
+    border-radius: 12px;
+    background-color: var(--main-card-background);
+    border: 1px solid var(--main-card-border);
+
+    .poetry-title {
+      font-size: 1.4em;
+      font-weight: 600;
+      color: var(--main-font-color);
+      margin-bottom: 0.4em;
+    }
+
+    .poetry-author {
+      font-size: 0.9em;
+      color: var(--main-font-second-color);
+      margin-bottom: 1.5em;
+    }
+
+    .poetry-body {
+      text-align: center;
+      line-height: 2;
+
+      p {
+        margin: 0;
+        color: var(--main-font-color);
+      }
+
+      .poetry-empty {
+        height: 1em;
+      }
+    }
+
+    .poetry-footer {
+      font-size: 0.9em;
+      color: var(--main-font-second-color);
+      margin-top: 1.5em;
+    }
+  }
+
   // LinkBanner 链接横幅
   .link-banner {
     display: block;
@@ -913,6 +998,60 @@
       margin-top: 0.5em;
       font-size: 0.8em;
       color: var(--main-font-second-color);
+    }
+  }
+
+  // quote 块级引用标签
+  .quote-block {
+    position: relative;
+    padding: 1rem 0;
+    isolation: isolate;
+
+    .quote-icon-line {
+      position: relative;
+      opacity: 0.5;
+      min-height: 0.5em;
+      margin-bottom: -0.5em;
+      font-size: 4rem;
+      color: var(--main-font-second-color);
+      mask-image: linear-gradient(#fff, transparent);
+      transition: all 0.2s;
+      z-index: -1;
+      line-height: 1;
+    }
+
+    .quote-icon-text {
+      display: inline-block;
+    }
+
+    &:hover .quote-icon-line {
+      opacity: 1;
+      transform: translateY(-0.5rem);
+    }
+
+    .quote-content {
+      font-size: 1.2rem;
+      line-height: 1.5;
+      color: var(--main-font-second-color);
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  // quote 内联引用标签
+  .quote-inline {
+    display: inline;
+    color: var(--main-font-second-color);
+    font-size: 1.05em;
+
+    .quote-inline-icon {
+      display: inline;
+      vertical-align: -0.15em;
+      margin-right: 0.2em;
+      opacity: 0.6;
+      font-size: 1em;
     }
   }
 }
