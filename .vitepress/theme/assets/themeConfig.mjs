@@ -450,26 +450,32 @@ export const themeConfig = {
   // 说说页面配置
   moment: {
     // 默认展示的数据源: memos / jike / tgtalk / mastodon
-    defaultTab: "mastodon",
+    defaultTab: "memo",
     // 数据源 Tab 配置（控制显示/隐藏）
     tabs: [
       { key: "memos", enable: true },
       { key: "jike", enable: false },
       { key: "tgtalk", enable: true },
       { key: "mastodon", enable: true },
+      { key: "memo", enable: true },
     ],
     // Mastodon 配置
     mastodon: {
       // API 地址
       apiUrl: "https://mastodon-api.20050815.xyz/",
     },
+    // Memo 说说配置（Typecho 驱动）
+    memo: {
+      // API 地址
+      apiUrl: "https://m.2005815.xyz/v1/memo",
+    },
   },
   // 说说滚动条配置
   momentTicker: {
     // 是否启用
     enable: true,
-    // 数据源: memos / jike / tgtalk / mastodon
-    source: "mastodon",
+    // 数据源: memos / jike / tgtalk / mastodon / memo
+    source: "memo",
     // 显示数量
     limit: 5,
   },

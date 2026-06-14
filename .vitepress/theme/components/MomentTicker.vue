@@ -7,18 +7,6 @@
         <div class="ticker-item">
           <span v-if="currentItem.tag" class="item-tag">#{{ currentItem.tag }}</span>
           <span class="item-text">{{ currentItem.snippet }}</span>
-          <span v-if="currentItem.hasImage" class="item-badge">
-            <i class="iconfont icon-image"></i>
-          </span>
-          <span v-if="currentItem.hasVideo" class="item-badge">
-            <i class="iconfont icon-video"></i>
-          </span>
-          <span v-if="currentItem.hasMusic" class="item-badge">
-            <i class="iconfont icon-music"></i>
-          </span>
-          <span v-if="currentItem.hasLink" class="item-badge">
-            <i class="iconfont icon-link"></i>
-          </span>
         </div>
       </div>
     </div>
@@ -56,6 +44,9 @@ const fetchData = async () => {
       case 'mastodon':
         await fetchMastodon();
         break;
+      case 'memo':
+        await fetchMemo();
+        break;
       default:
         await fetchMemos();
     }
@@ -80,19 +71,17 @@ const fetchMemos = async () => {
 
   items.value = data.memos.slice(0, maxItems).map(memo => {
     const tag = extractTag(memo.content);
-    // 移除标签后的内容
     let cleanContent = memo.content?.replace(/#\S+\s*/g, '').trim() || '';
     cleanContent = cleanContent.replace(/<[^>]+>/g, '').slice(0, 60);
+
+    const hasImage = memo.attachments?.some(a => a.type?.startsWith('image/'));
+    if (hasImage) cleanContent += ' [!图片]';
 
     return {
       id: memo.name,
       content: memo.content,
       snippet: cleanContent,
       tag: tag,
-      hasImage: memo.attachments?.some(a => a.type?.startsWith('image/')),
-      hasVideo: memo.attachments?.some(a => a.type?.startsWith('video/')),
-      hasMusic: false,
-      hasLink: /https?:\/\/[^\s]+/.test(memo.content),
       date: memo.displayTime || memo.createTime,
     };
   });
@@ -116,17 +105,14 @@ const fetchJike = async () => {
   items.value = Array.from(rssItems).slice(0, maxItems).map((item, index) => {
     const description = item.querySelector('description')?.textContent || '';
     const hasImage = /<img[^>]+src="([^"]+)"/.test(description);
-    let cleanContent = description.replace(/<[^>]+>/g, '').trim();
+    let cleanContent = description.replace(/<[^>]+>/g, '').trim().slice(0, 60);
+    if (hasImage) cleanContent += ' [!图片]';
 
     return {
       id: `jike-${index}`,
       content: cleanContent,
-      snippet: cleanContent.slice(0, 60),
+      snippet: cleanContent,
       tag: null,
-      hasImage: hasImage,
-      hasVideo: false,
-      hasMusic: false,
-      hasLink: false,
       date: item.querySelector('pubDate')?.textContent,
     };
   });
@@ -141,27 +127,20 @@ const fetchTGTalk = async () => {
 
   items.value = data.data.slice(0, maxItems).map(item => {
     let content = item.text || '';
-    // 提取标签
     const tag = extractTag(content);
-    // 移除 emoji 图片标签
     content = content.replace(/<i class="emoji"[^>]*>.*?<\/i>/g, '');
     content = content.replace(/<img[^>]*telegram\.org[^>]*>/g, '');
-    // 移除标签链接
     content = content.replace(/<a href="\?q=%23[^"]*">#([^<]*)<\/a>/g, '');
-    const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+    let cleanContent = content.replace(/<[^>]+>/g, '').trim().slice(0, 60);
 
-    // 过滤掉 telegram 图片
     const hasRealImage = item.image?.some(img => !img.includes('telegram.org'));
+    if (hasRealImage) cleanContent += ' [!图片]';
 
     return {
       id: `tgtalk-${item.id}`,
       content: cleanContent,
-      snippet: cleanContent.slice(0, 60),
+      snippet: cleanContent,
       tag: tag,
-      hasImage: hasRealImage,
-      hasVideo: false,
-      hasMusic: false,
-      hasLink: /https?:\/\/[^\s]+/.test(content),
       date: item.time,
     };
   });
@@ -180,20 +159,41 @@ const fetchMastodon = async () => {
   items.value = data.data.slice(0, maxItems).map(item => {
     const content = item.text || '';
     const tag = extractTag(content);
-    const cleanContent = content.replace(/#\S+\s*/g, '').trim();
+    let cleanContent = content.replace(/#\S+\s*/g, '').trim().slice(0, 60);
     const hasImage = (item.image || []).length > 0;
-    const hasLink = /https?:\/\/[^\s]+/.test(content);
+    if (hasImage) cleanContent += ' [!图片]';
 
     return {
       id: `mastodon-${item.id}`,
       content: content,
-      snippet: cleanContent.slice(0, 60),
+      snippet: cleanContent,
       tag: tag,
-      hasImage: hasImage,
-      hasVideo: false,
-      hasMusic: false,
-      hasLink: hasLink,
       date: item.time,
+    };
+  });
+};
+
+// Memo 数据
+const fetchMemo = async () => {
+  const apiUrl = themeConfig.moment?.memo?.apiUrl || 'https://m.2005815.xyz/v1/memo';
+  const response = await fetch(apiUrl);
+  const json = await response.json();
+
+  if (json.code !== 0 || !json.data?.posts) return;
+
+  items.value = json.data.posts.slice(0, maxItems).map(post => {
+    const tag = post.tags?.length > 0 ? post.tags[0].name : null;
+    const content = post.content?.replace(/<!--markdown-->/g, '').trim() || '';
+    let cleanContent = content.replace(/<[^>]+>/g, '').trim().slice(0, 60);
+
+    if (post.images?.length > 0) cleanContent += ' [!图片]';
+
+    return {
+      id: `memo-${post.cid}`,
+      content: content,
+      snippet: cleanContent,
+      tag: tag,
+      date: new Date(post.created * 1000).toISOString(),
     };
   });
 };
@@ -347,18 +347,6 @@ onUnmounted(() => {
     text-overflow: ellipsis;
   }
 
-  .item-badge {
-    display: inline-flex;
-    align-items: center;
-    margin-left: 0.4rem;
-    color: var(--main-font-second-color);
-    font-size: 0.8rem;
-    flex-shrink: 0;
-
-    .iconfont {
-      font-size: 0.85rem;
-    }
-  }
 }
 
 .ticker-arrow {

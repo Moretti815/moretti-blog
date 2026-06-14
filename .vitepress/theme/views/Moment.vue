@@ -87,6 +87,7 @@ const allTabs = [
   { key: 'jike', label: '即刻', icon: 'rss' },
   { key: 'tgtalk', label: 'TGTalk', icon: 'chat' },
   { key: 'mastodon', label: 'Mastodon', icon: 'link' },
+  { key: 'memo', label: '说说', icon: 'message' },
 ];
 
 // 从配置中读取启用的 Tab
@@ -183,6 +184,9 @@ const fetchData = async () => {
         break;
       case 'mastodon':
         await fetchMastodon();
+        break;
+      case 'memo':
+        await fetchMemo();
         break;
     }
     // 数据加载完成后，等待 DOM 更新，然后初始化 fancybox
@@ -314,6 +318,40 @@ const fetchMastodon = async () => {
   });
 
   hasMore.value = !!data.nextBefore;
+};
+
+// Memo 数据（来自 m.2005815.xyz）
+const fetchMemo = async () => {
+  const apiUrl = themeConfig.moment?.memo?.apiUrl || 'https://m.2005815.xyz/v1/memo';
+  const response = await fetch(apiUrl);
+  const json = await response.json();
+
+  if (json.code !== 0 || !json.data?.posts) throw new Error('获取 Memo 数据失败');
+
+  rawData.value = json.data.posts.map(post => ({
+    id: `memo-${post.cid}`,
+    title: post.title?.trim(),
+    content: post.content || '',
+    snippet: post.summary || '',
+    tags: (post.tags || []).map(t => t.name),
+    date: new Date(post.created * 1000).toISOString(),
+    images: post.images || [],
+    video: post.video || null,
+    music: post.music || [],
+    isAd: !!post.isAd,
+    isTop: !!post.isTop,
+    position: post.position || null,
+    author: post.author || null,
+    permalink: post.permalink || null,
+    views: post.views || 0,
+    likesCount: post.likesCount || 0,
+    likes: post.likes || [],
+    commentsCount: post.commentsCount || 0,
+    comments: post.comments || [],
+    link: post.permalink || null,
+  }));
+
+  hasMore.value = !!json.data.hasMore;
 };
 
 // TGTalk 数据
