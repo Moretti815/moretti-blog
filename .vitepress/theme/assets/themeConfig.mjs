@@ -144,7 +144,7 @@ export const themeConfig = {
       name: "项目",
       list: [
         {
-          icon: "https://cdn2.codesign.qq.com/icons/g5ZpEgx3z4VO6j2/latest/iconfont.css",
+          icon: "tabler:home",
           name: "主页",
           url: "https://home.2005815.xyz",
         },

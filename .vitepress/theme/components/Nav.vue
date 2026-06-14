@@ -17,7 +17,10 @@
                     class="more-link"
                     target="_blank"
                   >
-                    <img class="link-icon" :src="link.icon" :alt="link.name" />
+                    <img v-if="link.icon && link.icon.startsWith('/')" class="link-icon link-icon-img" :src="link.icon" :alt="link.name" />
+                    <span v-else-if="link.icon" class="link-icon-wrap">
+                      <Icon :name="link.icon" />
+                    </span>
                     <span class="link-name">{{ link.name }}</span>
                   </a>
                 </div>
@@ -263,8 +266,26 @@ const { site, theme, frontmatter, page } = useData();
                 .link-icon {
                   width: 24px;
                   height: 24px;
-                  border-radius: 50%;
                   margin-right: 8px;
+                  flex-shrink: 0;
+                }
+                .link-icon-wrap {
+                  width: 24px;
+                  height: 24px;
+                  margin-right: 8px;
+                  flex-shrink: 0;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 20px;
+                }
+                .link-icon-wrap :deep(svg) {
+                  width: 24px;
+                  height: 24px;
+                }
+                .link-icon-img {
+                  border-radius: 50%;
+                  object-fit: cover;
                 }
                 &:hover {
                   color: var(--main-card-background);

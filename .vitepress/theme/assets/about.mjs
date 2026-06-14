@@ -8,8 +8,8 @@ export const aboutData = {
   // 作者信息
   authorInfo: {
     image: "https://agi.alicdn.com/user/769lz/06729553-fde6-4d7a-94ed-25be45434b8d_icon.jpeg",
-    leftTags: ["前端开发", "开源爱好者", "全栈探索"],
-    rightTags: ["热爱生活", "追求极致", "持续学习"],
+    leftTags: ["博客魔改", "开源爱好者", "小说读者"],
+    rightTags: ["热爱生活", "咸鱼精神", "持续进步"],
   },
 
   // 内容信息
